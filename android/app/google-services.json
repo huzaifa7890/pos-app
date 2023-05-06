@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "419833080386",
+    "project_id": "pixelone-1969b",
+    "storage_bucket": "pixelone-1969b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:419833080386:android:12f43ef99071f338b79bdb",
+        "android_client_info": {
+          "package_name": "com.example.posapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "419833080386-brrk3gmm5v4ao5b4bedevc7elpvislu4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTR5pOgH5cDO-wFbIFfDeewVCk_fBIOWE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "419833080386-brrk3gmm5v4ao5b4bedevc7elpvislu4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
