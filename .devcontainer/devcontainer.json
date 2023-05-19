@@ -1,0 +1,13 @@
+{
+    "name": "flutter_docker",
+    "context": "..",
+    "dockerFile": "../Dockerfile",
+    "remoteUser": "root",
+    // "privileged": true,
+    "mounts": ["source=/dev,target=/dev,type=bind"],
+    "runArgs": ["--privileged", "--network=host"],
+    // "forwardPorts": ["5555:5555"],
+    "workspaceMount": "source=${localWorkspaceFolder},target=/app,type=bind,consistency=delegated",
+    "workspaceFolder": "/app"
+  }
+  
