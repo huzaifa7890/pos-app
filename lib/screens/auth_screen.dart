@@ -1,10 +1,10 @@
-import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:posapp/screens/homepage.dart';
 import '../widgets/auth_form.dart';
+import '/constants.dart' as Constants;
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -14,35 +14,65 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final _auth = FirebaseAuth.instance;
   var _isLoading = false;
   void _isSubmitted(
     String email,
     String password,
-    String username,
+    String fullname,
+    String phoneno,
+    String business,
     bool isLogin,
     BuildContext ctx,
   ) async {
     try {
-      setState(() {
-        _isLoading = true;
-      });
-      if (isLogin) {
-        (await _auth.signInWithEmailAndPassword(
-            email: email, password: password));
+      Map<String, String> requestBody = {
+        'full_name': fullname,
+        'phone_no': phoneno,
+        'business_name': business,
+        'password': password,
+        'email': email,
+      };
+
+      Map<String, String> headers = {
+        "content-type": "application/json",
+        "Accept": "application/json",
+      };
+      if (!isLogin) {
+        print('Login sninsi');
+        final response = await http.post(
+          Uri.parse('${Constants.BASE_API_URL}/auth/signup'),
+          headers: headers,
+          body: json.encode(requestBody),
+        );
+
+        if (response.statusCode == 200) {
+          var data = jsonDecode(response.body);
+          print(data);
+          // ignore: use_build_context_synchronously
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        }
       } else {
-        (await _auth.createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        ));
+        final response = await http.post(
+          Uri.parse('${Constants.BASE_API_URL}/auth/login'),
+          headers: headers,
+          body: json.encode(requestBody),
+        );
+        if (response.statusCode == 200) {
+          var data = jsonDecode(response.body);
+          print(data);
+          // ignore: use_build_context_synchronously
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        }
       }
-    } on FirebaseAuthException catch (err) {
-      var message = 'An error occured please check your details';
-      if (err.message != null) {
-        message = err.message!;
-      }
+
       ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-        content: Text(message),
+        content: Text("Haha"),
         backgroundColor: Colors.black,
       ));
       setState(() {

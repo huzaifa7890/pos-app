@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,9 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(
               Icons.logout,
             ),
-            onPressed: () => {
-              FirebaseAuth.instance.signOut(),
-            },
+            onPressed: () => {},
           ),
         ],
       ),

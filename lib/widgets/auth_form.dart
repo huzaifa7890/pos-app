@@ -9,7 +9,9 @@ class AuthForm extends StatefulWidget {
   final void Function(
     String email,
     String password,
-    String username,
+    String fullname,
+    String phoneno,
+    String business,
     bool isLogin,
     BuildContext ctx,
   ) submitFn;
@@ -24,6 +26,8 @@ class _AuthFormState extends State<AuthForm> {
   var _userEmail = '';
   var _userName = '';
   var _userPassword = '';
+  var _phoneno = '';
+  var _business = '';
 
   void _trySubmit() {
     final isValid = _formKey.currentState!.validate();
@@ -34,6 +38,8 @@ class _AuthFormState extends State<AuthForm> {
         _userEmail.trim(),
         _userPassword.trim(),
         _userName.trim(),
+        _business.trim(),
+        _phoneno,
         _isLogin,
         context,
       );
@@ -69,14 +75,14 @@ class _AuthFormState extends State<AuthForm> {
                 ),
                 if (!_isLogin)
                   TextFormField(
-                    key: const ValueKey('username'),
+                    key: const ValueKey('Fullname'),
                     validator: (value) {
                       if (value!.isEmpty || value.length < 4) {
                         return 'Please enter 4 digit long username';
                       }
                       return null;
                     },
-                    decoration: const InputDecoration(labelText: 'Username'),
+                    decoration: const InputDecoration(labelText: 'Full Name'),
                     onSaved: (value) {
                       _userName = value!;
                     },
@@ -95,6 +101,35 @@ class _AuthFormState extends State<AuthForm> {
                     _userPassword = value!;
                   },
                 ),
+                if (!_isLogin)
+                  TextFormField(
+                    key: const ValueKey('phoneno'),
+                    validator: (value) {
+                      if (value!.isEmpty || value.length < 10) {
+                        return 'password must be 10 characters long';
+                      }
+                      return null;
+                    },
+                    decoration: const InputDecoration(labelText: 'Phone'),
+                    keyboardType: TextInputType.number,
+                    onSaved: (value) {
+                      _userPassword = value!;
+                    },
+                  ),
+                if (!_isLogin)
+                  TextFormField(
+                    key: const ValueKey('Business'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'password must be entered';
+                      }
+                      return null;
+                    },
+                    decoration: const InputDecoration(labelText: 'Business'),
+                    onSaved: (value) {
+                      _userPassword = value!;
+                    },
+                  ),
                 const SizedBox(
                   height: 12,
                 ),
