@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:posapp/screens/homepage.dart';
 import '../widgets/auth_form.dart';
@@ -25,6 +26,9 @@ class _AuthScreenState extends State<AuthScreen> {
     BuildContext ctx,
   ) async {
     try {
+      setState(() {
+        _isLoading = true;
+      });
       Map<String, String> requestBody = {
         'full_name': fullname,
         'phone_no': phoneno,
@@ -38,7 +42,6 @@ class _AuthScreenState extends State<AuthScreen> {
         "Accept": "application/json",
       };
       if (!isLogin) {
-        print('Login sninsi');
         final response = await http.post(
           Uri.parse('${Constants.BASE_API_URL}/auth/signup'),
           headers: headers,
@@ -47,12 +50,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
         if (response.statusCode == 200) {
           var data = jsonDecode(response.body);
-          print(data);
-          // ignore: use_build_context_synchronously
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
-          );
         }
       } else {
         final response = await http.post(
@@ -62,27 +59,25 @@ class _AuthScreenState extends State<AuthScreen> {
         );
         if (response.statusCode == 200) {
           var data = jsonDecode(response.body);
-          print(data);
-          // ignore: use_build_context_synchronously
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
-          );
         }
       }
-
+    } catch (err) {
+      var message = 'An error occured please check your details';
+      if (err != null) {
+        message = err.toString();
+      }
       ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-        content: Text("Haha"),
+        content: Text(message),
         backgroundColor: Colors.black,
       ));
-      setState(() {
-        _isLoading = false;
-      });
-    } catch (err) {
       print(err);
       setState(() {
         _isLoading = false;
       });
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
     }
   }
 

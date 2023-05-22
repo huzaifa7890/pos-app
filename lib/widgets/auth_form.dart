@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants.dart' as Constants;
 
 class AuthForm extends StatefulWidget {
   AuthForm(this.submitFn, this.isLoading);
@@ -57,43 +58,61 @@ class _AuthFormState extends State<AuthForm> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextFormField(
-                  key: const ValueKey('email'),
-                  validator: (value) {
-                    if (value!.isEmpty || !value.contains('@')) {
-                      return 'please enter a valid email address';
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(labelText: 'Email Address'),
-                  onSaved: (value) {
-                    _userEmail = value!;
-                  },
-                ),
                 if (!_isLogin)
                   TextFormField(
                     key: const ValueKey('Fullname'),
                     validator: (value) {
                       if (value!.isEmpty || value.length < 4) {
-                        return 'Please enter 4 digit long username';
+                        return Constants.SH_Full_Name_Error;
                       }
                       return null;
                     },
-                    decoration: const InputDecoration(labelText: 'Full Name'),
+                    decoration:
+                        const InputDecoration(hintText: Constants.HT_FULL_NAME),
                     onSaved: (value) {
                       _userName = value!;
                     },
                   ),
+                if (!_isLogin)
+                  TextFormField(
+                    key: const ValueKey('Business'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return Constants.SH_Password_Error;
+                      }
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                        hintText: Constants.HT_BUSINESS_NAME),
+                    onSaved: (value) {
+                      _userPassword = value!;
+                    },
+                  ),
+                TextFormField(
+                  key: const ValueKey('email'),
+                  validator: (value) {
+                    if (value!.isEmpty || !value.contains('@')) {
+                      return Constants.SH_Email_Error;
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                      hintText: Constants.HT_EMAIL_ADDRESS),
+                  onSaved: (value) {
+                    _userEmail = value!;
+                  },
+                ),
                 TextFormField(
                   key: const ValueKey('password'),
                   validator: (value) {
                     if (value!.isEmpty || value.length < 6) {
-                      return 'password must be 6 characters long';
+                      return Constants.SH_Password_Error;
                     }
                     return null;
                   },
-                  decoration: const InputDecoration(labelText: 'Password'),
+                  decoration:
+                      const InputDecoration(hintText: Constants.HT_PASSWORD),
                   obscureText: true,
                   onSaved: (value) {
                     _userPassword = value!;
@@ -104,26 +123,13 @@ class _AuthFormState extends State<AuthForm> {
                     key: const ValueKey('phoneno'),
                     validator: (value) {
                       if (value!.isEmpty || value.length < 10) {
-                        return 'password must be 10 characters long';
+                        return Constants.SH_Phone_Error;
                       }
                       return null;
                     },
-                    decoration: const InputDecoration(labelText: 'Phone'),
+                    decoration:
+                        const InputDecoration(hintText: Constants.HT_PHONE_NO),
                     keyboardType: TextInputType.number,
-                    onSaved: (value) {
-                      _userPassword = value!;
-                    },
-                  ),
-                if (!_isLogin)
-                  TextFormField(
-                    key: const ValueKey('Business'),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'password must be entered';
-                      }
-                      return null;
-                    },
-                    decoration: const InputDecoration(labelText: 'Business'),
                     onSaved: (value) {
                       _userPassword = value!;
                     },
