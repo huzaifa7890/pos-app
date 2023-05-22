@@ -34,7 +34,8 @@ class _AuthScreenState extends State<AuthScreen> {
 
       if (!isLogin) {
         await Provider.of<Auth>(context, listen: false)
-            .signup(email, password, fullname, phoneno, business);
+            .signup(email, password, fullname, business, phoneno);
+
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: ((ctx) => const HomeScreen())),
         );

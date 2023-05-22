@@ -63,7 +63,7 @@ class _AuthFormState extends State<AuthForm> {
                     key: const ValueKey('Fullname'),
                     validator: (value) {
                       if (value!.isEmpty || value.length < 4) {
-                        return Constants.SH_Full_Name_Error;
+                        return Constants.SH_FULL_NAME_ERROR;
                       }
                       return null;
                     },
@@ -78,7 +78,7 @@ class _AuthFormState extends State<AuthForm> {
                     key: const ValueKey('Business'),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return Constants.SH_Password_Error;
+                        return Constants.SH_PASSWORD_ERROR;
                       }
                       return null;
                     },
@@ -92,7 +92,7 @@ class _AuthFormState extends State<AuthForm> {
                   key: const ValueKey('email'),
                   validator: (value) {
                     if (value!.isEmpty || !value.contains('@')) {
-                      return Constants.SH_Email_Error;
+                      return Constants.SH_EMAIL_ERROR;
                     }
                     return null;
                   },
@@ -107,7 +107,7 @@ class _AuthFormState extends State<AuthForm> {
                   key: const ValueKey('password'),
                   validator: (value) {
                     if (value!.isEmpty || value.length < 6) {
-                      return Constants.SH_Password_Error;
+                      return Constants.SH_PASSWORD_ERROR;
                     }
                     return null;
                   },
@@ -123,7 +123,7 @@ class _AuthFormState extends State<AuthForm> {
                     key: const ValueKey('phoneno'),
                     validator: (value) {
                       if (value!.isEmpty || value.length < 6) {
-                        return Constants.SH_Phone_Error;
+                        return Constants.SH_PHONENO_ERROR;
                       }
                       return null;
                     },

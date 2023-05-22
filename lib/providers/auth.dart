@@ -1,21 +1,29 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+
 import '../constants.dart' as Constants;
 import 'package:http/http.dart' as http;
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../model/HttpException.dart';
 
 class Auth with ChangeNotifier {
-  late String token;
-  late String userId;
+  String _token;
+  String userId;
 
   bool get isAuth {
     return token != null;
   }
 
-  Future<void> _authenticate(String email, String password, String fullname,
-      String business, String phoneno, urlsegment) async {
+  String? get token {
+    if (_token != null) {
+      return _token;
+    }
+    return null;
+  }
+
+  Future<void> signup(String email, String password, String fullname,
+      String business, String phoneno) async {
     try {
       Map<String, String> requestBody = {
         'email': email,
@@ -30,16 +38,17 @@ class Auth with ChangeNotifier {
         "Accept": "application/json",
       };
       final response = await http.post(
-        Uri.parse('${Constants.BASE_API_URL}/auth/$urlsegment'),
+        Uri.parse('${Constants.BASE_API_URL}/auth/signup'),
         headers: headers,
         body: json.encode(requestBody),
       );
       final responseData = json.decode(response.body);
-      if (response.statusCode == 200) {
-        print(responseData);
-      }
       if (responseData['error'] != null) {
+        print(responseData);
         throw HttpException(responseData['error']);
+      } else {
+        final token = responseData['user']['token'];
+        print('token here$token');
       }
       notifyListeners();
     } catch (error) {
@@ -47,12 +56,59 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<void> signup(email, password, fullname, business, phoneno) async {
-    return _authenticate(
-        email, password, fullname, business, phoneno, 'signup');
+  Future<void> login(String email, String password) async {
+    try {
+      Map<String, String> requestBody = {
+        'email': email,
+        'password': password,
+      };
+
+      Map<String, String> headers = {
+        "content-type": "application/json",
+        "Accept": "application/json",
+      };
+      final response = await http.post(
+        Uri.parse('${Constants.BASE_API_URL}/auth/login'),
+        headers: headers,
+        body: json.encode(requestBody),
+      );
+      final responseData = json.decode(response.body);
+      if (responseData['error'] != null) {
+        throw HttpException(responseData['error']);
+      } else {
+        print('token here$token');
+        _token = responseData['user']['token'];
+        final pref = await SharedPreferences.getInstance();
+        final userdata = json.encode({
+          'token': _token,
+        });
+        pref.setString('key', userdata);
+      }
+      notifyListeners();
+    } catch (error) {
+      rethrow;
+    }
   }
 
-  Future<void> login(String email, String password) async {
-    return _authenticate(email, password, "", "", "", 'login');
+  Future<bool> tryautoLogin() async {
+    final pref = await SharedPreferences.getInstance();
+    if (!pref.containsKey('key')) {
+      return false;
+    }
+    final userpref = pref.getString('key');
+    final extractedUserData = json.decode(userpref!) as Map<String, dynamic>;
+
+    _token = extractedUserData['token'];
+
+    notifyListeners();
+
+    return true;
+  }
+
+  Future<void> logout() async {
+    _token = null;
+    notifyListeners();
+    final pref = await SharedPreferences.getInstance();
+    pref.clear();
   }
 }

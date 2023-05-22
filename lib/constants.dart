@@ -12,10 +12,10 @@ const String HT_PASSWORD = "Password";
 const String HT_PHONE_NO = "Phone Number";
 const String LABEL_REGISTER = "Register";
 
-const String SH_Full_Name_Error = "Please Enter Your Full Name";
-const String SH_Business_Error = "Please Enter Your Business";
-const String SH_Email_Error = "Please Enter Email Address";
-const String SH_Password_Error = "Please Enter Password";
-const String SH_Phone_Error = "Please Enter Phone Number";
+const String SH_FULL_NAME_ERROR = "Please Enter Your Full Name";
+const String SH_BUSINESS_ERROR = "Please Enter Your Business";
+const String SH_EMAIL_ERROR = "Please Enter Email Address";
+const String SH_PASSWORD_ERROR = "Please Enter Password";
+const String SH_PHONENO_ERROR = "Please Enter Phone Number";
 
 // Login page
