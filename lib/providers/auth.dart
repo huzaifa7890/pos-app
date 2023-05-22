@@ -35,7 +35,9 @@ class Auth with ChangeNotifier {
         body: json.encode(requestBody),
       );
       final responseData = json.decode(response.body);
-      if (response.statusCode == 200) {}
+      if (response.statusCode == 200) {
+        print(responseData);
+      }
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']);
       }
