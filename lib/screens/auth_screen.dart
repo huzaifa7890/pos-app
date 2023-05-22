@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:posapp/model/HttpException.dart';
-import 'package:posapp/screens/homepage.dart';
+import 'package:pixelone/screens/homepage.dart';
+import '../model/HttpException.dart';
 import '../providers/auth.dart';
 import '../widgets/auth_form.dart';
 import '/constants.dart' as Constants;
@@ -46,7 +43,7 @@ class _AuthScreenState extends State<AuthScreen> {
         );
       }
     } on HttpException catch (error) {
-      var errorMessage = 'Authentication Failed';
+      var errorMessage = Constants.HT_ERROR;
       if (error != null) {
         errorMessage = error.toString();
         ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
@@ -58,7 +55,7 @@ class _AuthScreenState extends State<AuthScreen> {
         });
       }
     } catch (error) {
-      var errorMessage = 'Could not authenticate you. Please try again later.';
+      var errorMessage = Constants.HT_ERROR;
 
       if (error != null) {
         errorMessage = error.toString();

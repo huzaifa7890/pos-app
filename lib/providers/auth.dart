@@ -8,8 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/HttpException.dart';
 
 class Auth with ChangeNotifier {
-  String _token;
-  String userId;
+  // ignore: prefer_typing_uninitialized_variables
+  var _token;
+  var userId;
 
   bool get isAuth {
     return token != null;
@@ -47,8 +48,8 @@ class Auth with ChangeNotifier {
         print(responseData);
         throw HttpException(responseData['error']);
       } else {
-        final token = responseData['user']['token'];
-        print('token here$token');
+        final tokden = responseData['user']['token'];
+        print('token here$tokden');
       }
       notifyListeners();
     } catch (error) {
@@ -76,8 +77,12 @@ class Auth with ChangeNotifier {
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']);
       } else {
-        print('token here$token');
+        final tokken = responseData['user']['token'];
+        print('token here $tokken');
         _token = responseData['user']['token'];
+
+        notifyListeners();
+
         final pref = await SharedPreferences.getInstance();
         final userdata = json.encode({
           'token': _token,

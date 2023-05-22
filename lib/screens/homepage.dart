@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,7 +20,9 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(
               Icons.logout,
             ),
-            onPressed: () => {},
+            onPressed: () => {
+              Provider.of<Auth>(context, listen: false).logout(),
+            },
           ),
         ],
       ),
