@@ -38,7 +38,7 @@ class _AuthFormState extends State<AuthForm> {
         _userPassword.trim(),
         _userName.trim(),
         _business.trim(),
-        _phoneno,
+        _phoneno.trim(),
         _isLogin,
         context,
       );
@@ -122,7 +122,7 @@ class _AuthFormState extends State<AuthForm> {
                   TextFormField(
                     key: const ValueKey('phoneno'),
                     validator: (value) {
-                      if (value!.isEmpty || value.length < 10) {
+                      if (value!.isEmpty || value.length < 6) {
                         return Constants.SH_Phone_Error;
                       }
                       return null;

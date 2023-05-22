@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:posapp/model/HttpException.dart';
 import 'package:posapp/screens/homepage.dart';
+import '../providers/auth.dart';
 import '../widgets/auth_form.dart';
 import '/constants.dart' as Constants;
+import 'package:provider/provider.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -16,7 +18,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   var _isLoading = false;
-  void _isSubmitted(
+  Future<void> _isSubmitted(
     String email,
     String password,
     String fullname,
@@ -29,55 +31,45 @@ class _AuthScreenState extends State<AuthScreen> {
       setState(() {
         _isLoading = true;
       });
-      Map<String, String> requestBody = {
-        'full_name': fullname,
-        'phone_no': phoneno,
-        'business_name': business,
-        'password': password,
-        'email': email,
-      };
 
-      Map<String, String> headers = {
-        "content-type": "application/json",
-        "Accept": "application/json",
-      };
       if (!isLogin) {
-        final response = await http.post(
-          Uri.parse('${Constants.BASE_API_URL}/auth/signup'),
-          headers: headers,
-          body: json.encode(requestBody),
+        await Provider.of<Auth>(context, listen: false)
+            .signup(email, password, fullname, phoneno, business);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: ((ctx) => const HomeScreen())),
         );
-
-        if (response.statusCode == 200) {
-          var data = jsonDecode(response.body);
-        }
       } else {
-        final response = await http.post(
-          Uri.parse('${Constants.BASE_API_URL}/auth/login'),
-          headers: headers,
-          body: json.encode(requestBody),
+        await Provider.of<Auth>(context, listen: false).login(email, password);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: ((ctx) => const HomeScreen())),
         );
-        if (response.statusCode == 200) {
-          var data = jsonDecode(response.body);
-        }
       }
-    } catch (err) {
-      var message = 'An error occured please check your details';
-      if (err != null) {
-        message = err.toString();
+    } on HttpException catch (error) {
+      var errorMessage = 'Authentication Failed';
+      if (error != null) {
+        errorMessage = error.toString();
+        ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+          content: Text(errorMessage),
+          backgroundColor: Colors.black,
+        ));
+        setState(() {
+          _isLoading = false;
+        });
       }
-      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.black,
-      ));
-      print(err);
+    } catch (error) {
+      var errorMessage = 'Could not authenticate you. Please try again later.';
+
+      if (error != null) {
+        errorMessage = error.toString();
+
+        ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+          content: Text(errorMessage),
+          backgroundColor: Colors.black,
+        ));
+      }
       setState(() {
         _isLoading = false;
       });
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
     }
   }
 
