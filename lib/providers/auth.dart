@@ -23,8 +23,8 @@ class Auth with ChangeNotifier {
     return null;
   }
 
-  Future<void> signup(String email, String password, String fullname,
-      String business, String phoneno) async {
+  Future<void> signup(String fullname, String business, String email,
+      String password, String phoneno) async {
     try {
       Map<String, String> requestBody = {
         'email': email,
@@ -49,7 +49,7 @@ class Auth with ChangeNotifier {
         throw HttpException(responseData['error']);
       } else {
         final tokden = responseData['user']['token'];
-        print('token here$tokden');
+        print('token here $tokden');
       }
       notifyListeners();
     } catch (error) {

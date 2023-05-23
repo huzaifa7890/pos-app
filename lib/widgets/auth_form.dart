@@ -6,11 +6,11 @@ class AuthForm extends StatefulWidget {
 
   final bool isLoading;
   final void Function(
+    String fullname,
+    String business,
     String email,
     String password,
-    String fullname,
     String phoneno,
-    String business,
     bool isLogin,
     BuildContext ctx,
   ) submitFn;
@@ -22,11 +22,11 @@ class AuthForm extends StatefulWidget {
 class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
   bool _isLogin = true;
-  var _userEmail = '';
   var _userName = '';
+  var _business = '';
+  var _userEmail = '';
   var _userPassword = '';
   var _phoneno = '';
-  var _business = '';
 
   void _trySubmit() {
     final isValid = _formKey.currentState!.validate();
@@ -34,10 +34,10 @@ class _AuthFormState extends State<AuthForm> {
     if (isValid) {
       _formKey.currentState!.save();
       widget.submitFn(
+        _userName.trim(),
+        _business,
         _userEmail.trim(),
         _userPassword.trim(),
-        _userName.trim(),
-        _business.trim(),
         _phoneno.trim(),
         _isLogin,
         context,
@@ -60,7 +60,7 @@ class _AuthFormState extends State<AuthForm> {
               children: [
                 if (!_isLogin)
                   TextFormField(
-                    key: const ValueKey('Fullname'),
+                    key: const ValueKey('fullname'),
                     validator: (value) {
                       if (value!.isEmpty || value.length < 4) {
                         return Constants.SH_FULL_NAME_ERROR;
@@ -75,17 +75,17 @@ class _AuthFormState extends State<AuthForm> {
                   ),
                 if (!_isLogin)
                   TextFormField(
-                    key: const ValueKey('Business'),
+                    key: const ValueKey('business'),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return Constants.SH_PASSWORD_ERROR;
+                        return Constants.SH_BUSINESS_ERROR;
                       }
                       return null;
                     },
                     decoration: const InputDecoration(
                         hintText: Constants.HT_BUSINESS_NAME),
                     onSaved: (value) {
-                      _userPassword = value!;
+                      _business = value!;
                     },
                   ),
                 TextFormField(
@@ -131,7 +131,7 @@ class _AuthFormState extends State<AuthForm> {
                         const InputDecoration(hintText: Constants.HT_PHONE_NO),
                     keyboardType: TextInputType.number,
                     onSaved: (value) {
-                      _userPassword = value!;
+                      _phoneno = value!;
                     },
                   ),
                 const SizedBox(

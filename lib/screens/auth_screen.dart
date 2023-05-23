@@ -15,12 +15,12 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   var _isLoading = false;
-  Future<void> _isSubmitted(
+  void _isSubmitted(
+    String fullname,
+    String business,
     String email,
     String password,
-    String fullname,
     String phoneno,
-    String business,
     bool isLogin,
     BuildContext ctx,
   ) async {
@@ -31,7 +31,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
       if (!isLogin) {
         await Provider.of<Auth>(context, listen: false)
-            .signup(email, password, fullname, business, phoneno);
+            .signup(fullname, business, email, password, phoneno);
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: ((ctx) => const HomeScreen())),
