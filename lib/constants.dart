@@ -18,4 +18,5 @@ const String SH_EMAIL_ERROR = "Please Enter Email Address";
 const String SH_PASSWORD_ERROR = "Please Enter Password";
 const String SH_PHONENO_ERROR = "Please Enter Phone Number";
 
-// Login page
+// Authentication Errors
+const String HT_ERROR = "Could not authenticate you. Please try again later.";

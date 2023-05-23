@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:posapp/providers/auth.dart';
-import 'package:posapp/screens/homepage.dart';
-import 'package:posapp/screens/splash_screen.dart';
+import 'package:pixelone/providers/auth.dart';
+import 'package:pixelone/screens/homepage.dart';
+import 'package:pixelone/screens/splash_screen.dart';
+
 import 'package:provider/provider.dart';
 import './screens/auth_screen.dart';
 
