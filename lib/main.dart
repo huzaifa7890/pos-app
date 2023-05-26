@@ -34,8 +34,8 @@ class MyApp extends StatelessWidget {
               ? const HomeScreen()
               : FutureBuilder(
                   future: auth.tryautoLogin(),
-                  builder: (ctx, authres) =>
-                      authres.connectionState == ConnectionState.waiting
+                  builder: (ctx, i) =>
+                      i.connectionState == ConnectionState.waiting
                           ? const SplashScreen()
                           : const AuthScreen(),
                 ),

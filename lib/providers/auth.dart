@@ -8,9 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/HttpException.dart';
 
 class Auth with ChangeNotifier {
-  // ignore: prefer_typing_uninitialized_variables
   var _token;
-  var userId;
 
   bool get isAuth {
     return token != null;
@@ -45,11 +43,15 @@ class Auth with ChangeNotifier {
       );
       final responseData = json.decode(response.body);
       if (responseData['error'] != null) {
-        print(responseData);
         throw HttpException(responseData['error']);
       } else {
-        final tokden = responseData['user']['token'];
-        print('token here $tokden');
+        _token = responseData['user']['token'];
+
+        final pref = await SharedPreferences.getInstance();
+        final userdata = json.encode({
+          'token': _token,
+        });
+        pref.setString('key', userdata);
       }
       notifyListeners();
     } catch (error) {
@@ -77,12 +79,10 @@ class Auth with ChangeNotifier {
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']);
       } else {
-        final tokken = responseData['user']['token'];
-        print('token here $tokken');
+        final id = responseData['user']['id'];
+        print('id here $id');
+
         _token = responseData['user']['token'];
-
-        notifyListeners();
-
         final pref = await SharedPreferences.getInstance();
         final userdata = json.encode({
           'token': _token,
@@ -106,14 +106,13 @@ class Auth with ChangeNotifier {
     _token = extractedUserData['token'];
 
     notifyListeners();
-
     return true;
   }
 
   Future<void> logout() async {
     _token = null;
-    notifyListeners();
     final pref = await SharedPreferences.getInstance();
     pref.clear();
+    notifyListeners();
   }
 }
