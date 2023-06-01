@@ -21,6 +21,11 @@ class Auth with ChangeNotifier {
     return null;
   }
 
+  set token(String? value) {
+    _token = value;
+  }
+
+
   Future<void> signup(String fullname, String business, String email,
       String password, String phoneno) async {
     try {
