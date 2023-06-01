@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
-
+import '../widgets/app_drawer.dart';
 import '../providers/auth.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,12 +29,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          LogoutButton(),
-        ],
+        title: const Text("PixelOne"),
       ),
+      drawer: const AppDrawer(),
       body: const Center(
-        child: Text('homepage'),
+        child: Text("HomePage"),
       ),
     );
   }
@@ -72,19 +71,5 @@ class _HomeScreenState extends State<HomeScreen> {
   void deviceCapability() async {
     final bool isCapable = await auth!.canCheckBiometrics;
     isDeviceSupport = isCapable || await auth!.isDeviceSupported();
-  }
-}
-
-class LogoutButton extends StatelessWidget {
-  const LogoutButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.logout),
-      onPressed: () {
-        Provider.of<Auth>(context, listen: false).logout();
-      },
-    );
   }
 }
