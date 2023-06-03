@@ -67,7 +67,7 @@ class CTextFormField extends StatelessWidget {
         border: kInputBorder,
         enabledBorder: kInputBorder,
         focusedBorder: kInputFocusBorder,
-        contentPadding: EdgeInsets.all(18),
+        contentPadding: const EdgeInsets.all(18),
         // prefixIcon: Padding(
         //    padding: REdgeInsets.symmetric(vertical: 17.h, horizontal: 14.w),
         //   child: prefixIcon,

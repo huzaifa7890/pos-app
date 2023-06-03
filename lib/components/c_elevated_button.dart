@@ -39,7 +39,7 @@ class _CElevatedButtonState extends State<CElevatedButton> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6),
         ),
-        padding: EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         backgroundColor: primaryColor,
         textStyle: GoogleFonts.plusJakartaSans(
           fontSize: 16,

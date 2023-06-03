@@ -10,7 +10,7 @@ class AddNewOders extends StatelessWidget {
       appBar: AppBar(
         title: const Text('New Order'),
       ),
-      body: Column(
+      body: const Column(
         children: [
           Card(
             child: Text("data"),

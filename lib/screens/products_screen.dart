@@ -25,7 +25,7 @@ class ProductScreen extends StatelessWidget {
       drawer: const AppDrawer(),
       body: Center(
         child: ElevatedButton(
-          child: Text('data'),
+          child: const Text('data'),
           onPressed: () {
             Provider.of<Products>(context, listen: false).fetchandsetproduct();
           },

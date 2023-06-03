@@ -37,7 +37,7 @@ class _AddNewProductsState extends State<AddNewProducts> {
         ScanMode.BARCODE,
       );
       setState(() => barcodeResult = barcode);
-    } on PlatformException catch (e) {
+    } on PlatformException {
       barcodeResult = "Failed to get platform version";
     } on FormatException {
       setState(() => barcodeResult = 'Scan canceled');

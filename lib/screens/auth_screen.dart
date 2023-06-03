@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pixelone/screens/homepage.dart';
-import '../model/HttpException.dart';
+import '../model/http_exception.dart';
 import '../providers/auth.dart';
 import '../widgets/auth_form.dart';
 import '../utils/constants.dart' as Constants;

@@ -19,7 +19,7 @@ class OrderScreen extends StatelessWidget {
         ],
       ),
       drawer: const AppDrawer(),
-      body: Center(child: const Text('There Is No Order To Display')),
+      body: const Center(child: Text('There Is No Order To Display')),
     );
   }
 }
