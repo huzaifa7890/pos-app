@@ -13,13 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Set up Flutter
         uses: flutter-actions/setup-flutter@v2
         with:
-          flutter-version: '3.10.x' # Specify the desired Flutter version
-          channel: 'stable' # Specify the Flutter channel
+          version: '3.10.x' # Specify the desired Flutter version
       
       - name: Flutter Doctor
         run: flutter -v doctor
