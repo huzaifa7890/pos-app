@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pixelone/providers/auth.dart';
+import 'package:pixelone/providers/products.dart';
+import 'package:pixelone/screens/add_new_orders.dart';
+import 'package:pixelone/screens/add_new_products.dart';
 import 'package:pixelone/screens/homepage.dart';
+import 'package:pixelone/screens/order_screen.dart';
+import 'package:pixelone/screens/products_screen.dart';
 import 'package:pixelone/screens/splash_screen.dart';
 
 import 'package:provider/provider.dart';
@@ -21,6 +26,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Auth(),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => Products(),
+        ),
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
@@ -39,6 +47,12 @@ class MyApp extends StatelessWidget {
                           ? const SplashScreen()
                           : const AuthScreen(),
                 ),
+          routes: {
+            OrderScreen.routeName: (ctx) => const OrderScreen(),
+            AddNewOders.routeName: (ctx) => const AddNewOders(),
+            ProductScreen.routeName: (ctx) => const ProductScreen(),
+            AddNewProducts.routeName: (ctx) => const AddNewProducts(),
+          },
         ),
       ),
     );
