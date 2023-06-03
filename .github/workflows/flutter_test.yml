@@ -14,11 +14,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: v2
+          token: ${{ secrets.MOBILE_POS_ACTIONS_SECRET }}
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '2.x' # Specify the desired Flutter version
+          flutter-version: '3.10.x' # Specify the desired Flutter version
+          channel: 'stable' # Specify the Flutter channel
 
       - name: Get packages
         run: flutter pub get
