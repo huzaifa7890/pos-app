@@ -1,0 +1,39 @@
+name: Flutter Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.3'
+      
+      - name: Flutter Doctor
+        run: flutter -v doctor
+        
+      - name: Get packages
+        run: flutter -v pub get
+      - name: Analyze code
+        run: flutter analyze ./lib
+
+      # - name: Fail if analyze failed
+      #   run: |
+      #     if [[ $? -ne 0 ]]; then
+      #       echo "Flutter analyze failed"
+      #       exit 1
+      #     fi
+      - name: Run tests
+        run: flutter test
