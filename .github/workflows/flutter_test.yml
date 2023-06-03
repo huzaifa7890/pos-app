@@ -26,6 +26,14 @@ jobs:
         
       - name: Get packages
         run: flutter -v pub get
+      - name: Analyze code
+        run: flutter analyze ./lib
 
+      # - name: Fail if analyze failed
+      #   run: |
+      #     if [[ $? -ne 0 ]]; then
+      #       echo "Flutter analyze failed"
+      #       exit 1
+      #     fi
       - name: Run tests
         run: flutter test
