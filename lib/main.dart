@@ -7,11 +7,14 @@ import 'package:pixelone/screens/homepage.dart';
 import 'package:pixelone/screens/order_screen.dart';
 import 'package:pixelone/screens/products_screen.dart';
 import 'package:pixelone/screens/splash_screen.dart';
+import 'package:pixelone/utils/constants.dart';
 
 import 'package:provider/provider.dart';
 import './screens/auth_screen.dart';
+import 'utils/pallete.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -32,11 +35,16 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
+          themeMode: ThemeMode.system,
           debugShowCheckedModeBanner: false,
           title: 'Pixelone',
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
+            primarySwatch: Palette.primaryPaletteColor,
+            textSelectionTheme: const TextSelectionThemeData(
+              cursorColor: primaryColor,
+              selectionColor: primaryColor,
+              selectionHandleColor: primaryColor,
+            ),
           ),
           home: auth.isAuth
               ? const HomeScreen()

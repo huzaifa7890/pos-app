@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:provider/provider.dart';
 import '../widgets/app_drawer.dart';
-import '../providers/auth.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -29,6 +27,18 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: const [
+          InkWell(
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircleAvatar(
+                radius: 20,
+                backgroundImage: NetworkImage(
+                    'https://media.licdn.com/dms/image/C5633AQHMUtHzNXtYKQ/productpage-logo-image_100_100/0/1646286692710/pixel_software_solutions_pixelone_ecommerce_automation_management_logo?e=2147483647&v=beta&t=gfOaOJyMTVoSSRcuKiIN_tApCuTHl-R0JPRbVvbI-pk'),
+              ),
+            ),
+          )
+        ],
         title: const Text("PixelOne"),
       ),
       drawer: const AppDrawer(),
@@ -64,7 +74,6 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } catch (e) {
       // Handle the error here, e.g., display an error message or log the error
-      print('Error: $e');
     }
   }
 

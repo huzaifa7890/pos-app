@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_products.dart';
+import 'package:provider/provider.dart';
 import '../widgets/app_drawer.dart';
 
 class ProductScreen extends StatelessWidget {
@@ -22,7 +24,12 @@ class ProductScreen extends StatelessWidget {
       ),
       drawer: const AppDrawer(),
       body: Center(
-        child: Text('Their Is No Product TO Show'),
+        child: ElevatedButton(
+          child: Text('data'),
+          onPressed: () {
+            Provider.of<Products>(context, listen: false).fetchandsetproduct();
+          },
+        ),
       ),
     );
   }

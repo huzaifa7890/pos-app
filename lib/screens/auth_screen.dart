@@ -3,7 +3,7 @@ import 'package:pixelone/screens/homepage.dart';
 import '../model/HttpException.dart';
 import '../providers/auth.dart';
 import '../widgets/auth_form.dart';
-import '/constants.dart' as Constants;
+import '../utils/constants.dart' as Constants;
 import 'package:provider/provider.dart';
 
 class AuthScreen extends StatefulWidget {

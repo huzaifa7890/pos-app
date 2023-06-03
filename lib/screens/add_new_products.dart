@@ -3,6 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:pixelone/providers/products.dart';
 import 'package:provider/provider.dart';
 
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+
+import '../utils/constants.dart';
+
 class AddNewProducts extends StatefulWidget {
   static const routeName = '/add-product';
   const AddNewProducts({super.key});
@@ -22,8 +26,25 @@ class _AddNewProductsState extends State<AddNewProducts> {
   final _costPriceController = TextEditingController();
   final _sizeController = TextEditingController();
   final _barcodeController = TextEditingController();
+  String? barcodeResult;
 
-  String? sscanresult;
+  Future _scanBarcode() async {
+    try {
+      String barcode = await FlutterBarcodeScanner.scanBarcode(
+        '#ff6666',
+        'cancel',
+        true,
+        ScanMode.BARCODE,
+      );
+      setState(() => barcodeResult = barcode);
+    } on PlatformException catch (e) {
+      barcodeResult = "Failed to get platform version";
+    } on FormatException {
+      setState(() => barcodeResult = 'Scan canceled');
+    } catch (e) {
+      setState(() => barcodeResult = 'Error: $e');
+    }
+  }
 
   void _saveProduct() {
     final isValid = _formKey.currentState!.validate();
@@ -43,10 +64,27 @@ class _AddNewProductsState extends State<AddNewProducts> {
   }
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    _discriptionController.dispose();
+    _priceController.dispose();
+    _salesPriceController.dispose();
+    _skuController.dispose();
+    _weightController.dispose();
+    _costPriceController.dispose();
+    _barcodeController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Add New Products'),
+          title: const Text(
+            'Add New Products',
+          ),
+          elevation: 0,
+          backgroundColor: primaryColor,
           actions: [
             IconButton(
               onPressed: _saveProduct,
@@ -59,6 +97,8 @@ class _AddNewProductsState extends State<AddNewProducts> {
           child: Form(
             key: _formKey,
             child: ListView(
+              physics: const BouncingScrollPhysics(),
+              shrinkWrap: true,
               children: [
                 TextFormField(
                   controller: _nameController,
@@ -172,10 +212,9 @@ class _AddNewProductsState extends State<AddNewProducts> {
                         ),
                       ),
                     ),
-                    ElevatedButton.icon(
-                        onPressed: () {},
-                        icon: Icon(Icons.camera),
-                        label: Text("Start Scan"))
+                    ElevatedButton(
+                        onPressed: _scanBarcode,
+                        child: const Text("Start Scan"))
                   ],
                 ),
               ],

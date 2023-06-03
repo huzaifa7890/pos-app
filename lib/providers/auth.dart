@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../constants.dart' as Constants;
+import '../utils/constants.dart' as Constants;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/HttpException.dart';
@@ -25,7 +25,6 @@ class Auth with ChangeNotifier {
     _token = value;
   }
 
-
   Future<void> signup(String fullname, String business, String email,
       String password, String phoneno) async {
     try {
@@ -46,17 +45,13 @@ class Auth with ChangeNotifier {
         headers: headers,
         body: json.encode(requestBody),
       );
-      final responseData = json.decode(response.body);
+      final responseData = json.decode(response.body.toString());
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']);
       } else {
-        _token = responseData['user']['token'];
-
         final pref = await SharedPreferences.getInstance();
-        final userdata = json.encode({
-          'token': _token,
-        });
-        pref.setString('key', userdata);
+        String jsonString = json.encode(responseData);
+        pref.setString('key', jsonString);
       }
       notifyListeners();
     } catch (error) {
@@ -80,19 +75,13 @@ class Auth with ChangeNotifier {
         headers: headers,
         body: json.encode(requestBody),
       );
-      final responseData = json.decode(response.body);
+      final responseData = json.decode(response.body.toString());
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']);
       } else {
-        final id = responseData['user']['id'];
-        print('id here $id');
-
-        _token = responseData['user']['token'];
         final pref = await SharedPreferences.getInstance();
-        final userdata = json.encode({
-          'token': _token,
-        });
-        pref.setString('key', userdata);
+        final jsonString = json.encode(responseData);
+        pref.setString('key', jsonString);
       }
       notifyListeners();
     } catch (error) {
@@ -107,9 +96,7 @@ class Auth with ChangeNotifier {
     }
     final userpref = pref.getString('key');
     final extractedUserData = json.decode(userpref!) as Map<String, dynamic>;
-
-    _token = extractedUserData['token'];
-
+    _token = extractedUserData['user']['token'];
     notifyListeners();
     return true;
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../constants.dart' as Constants;
+import '../components/c_elevated_button.dart';
+import '../utils/constants.dart' as Constants;
 
 class AuthForm extends StatefulWidget {
   AuthForm(this.submitFn, this.isLoading);
@@ -147,7 +148,7 @@ class _AuthFormState extends State<AuthForm> {
                   ElevatedButton(
                     child: Text(_isLogin
                         ? 'Create New Account'
-                        : 'i already have an account'),
+                        : 'I already have an account'),
                     onPressed: () {
                       setState(() {
                         _isLogin = !_isLogin;
