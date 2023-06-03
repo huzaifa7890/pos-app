@@ -13,11 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: v2
-          token: ${{ secrets.MOBILE_POS_ACTIONS_SECRET }}
-
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
