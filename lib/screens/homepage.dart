@@ -29,18 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: const [
-          InkWell(
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                radius: 20,
-                backgroundImage: NetworkImage(
-                    'https://media.licdn.com/dms/image/C5633AQHMUtHzNXtYKQ/productpage-logo-image_100_100/0/1646286692710/pixel_software_solutions_pixelone_ecommerce_automation_management_logo?e=2147483647&v=beta&t=gfOaOJyMTVoSSRcuKiIN_tApCuTHl-R0JPRbVvbI-pk'),
-              ),
-            ),
-          )
-        ],
         title: const Text("PixelOne"),
       ),
       drawer: const AppDrawer(),
