@@ -1,3 +1,5 @@
+// ignore_for_file: library_prefixes, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:pixelone/screens/homepage.dart';
 import '../model/http_exception.dart';
