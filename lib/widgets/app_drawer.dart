@@ -6,7 +6,7 @@ import 'package:pixelone/providers/auth.dart';
 import 'package:pixelone/screens/order_screen.dart';
 
 class AppDrawer extends StatelessWidget {
-  const AppDrawer({Key? key});
+  const AppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {

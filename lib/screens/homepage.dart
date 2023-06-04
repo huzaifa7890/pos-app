@@ -16,7 +16,6 @@ class _HomeScreenState extends State<HomeScreen> {
   List<BiometricType>? availableBiometrics;
   LocalAuthentication? auth;
 
-  static const routeName = '/';
   @override
   void initState() {
     super.initState();
