@@ -1,4 +1,4 @@
-// ignore_for_file: library_prefixes
+// ignore_for_file: library_prefixes, unused_local_variable, prefer_final_fields
 
 import 'dart:convert';
 
