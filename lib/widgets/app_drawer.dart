@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:pixelone/screens/products_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/auth.dart';
-import '../screens/order_screen.dart';
+import 'package:pixelone/screens/products_screen.dart';
+import 'package:pixelone/providers/auth.dart';
+import 'package:pixelone/screens/order_screen.dart';
 
 class AppDrawer extends StatelessWidget {
-  const AppDrawer({super.key});
+  const AppDrawer({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +38,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.shop),
             title: const Text('Manage Product'),
             onTap: () {
-              Navigator.of(context)
-                  .pushReplacementNamed(ProductScreen.routeName);
+              Navigator.of(context).pushReplacementNamed(ProductScreen.routeName);
             },
           ),
           const Divider(),
@@ -47,7 +46,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.exit_to_app),
             title: const Text('Logout'),
             onTap: () {
-              Navigator.of(context).pop;
+              Navigator.of(context).pop();
               Navigator.of(context).pushReplacementNamed('/');
               Provider.of<Auth>(context, listen: false).logout();
             },
@@ -57,3 +56,4 @@ class AppDrawer extends StatelessWidget {
     );
   }
 }
+
