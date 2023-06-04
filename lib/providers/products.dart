@@ -1,4 +1,4 @@
-// ignore_for_file: library_prefixes
+// ignore_for_file: library_prefixes, prefer_final_fields
 
 import 'dart:convert';
 
@@ -60,8 +60,6 @@ class Products with ChangeNotifier {
         headers: headers,
       );
       if (response.statusCode == 200) {
-        final responsedata = jsonDecode(response.body.toString());
-        final pid = responsedata['data'];
       } else {}
     } catch (error) {
       rethrow;
