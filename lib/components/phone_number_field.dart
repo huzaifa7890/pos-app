@@ -63,9 +63,9 @@ class PhoneNumberField extends StatelessWidget {
         border: kInputBorder,
         enabledBorder: kInputBorder,
         focusedBorder: kInputFocusBorder,
-        contentPadding: EdgeInsets.all(18),
+        contentPadding: const EdgeInsets.all(18),
         prefixIcon: Padding(
-          padding: EdgeInsets.symmetric(vertical: 17, horizontal: 18),
+          padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 18),
           child: prefixIcon,
         ),
         hintText: hintText,

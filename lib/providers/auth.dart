@@ -1,3 +1,5 @@
+// ignore_for_file: library_prefixes, prefer_typing_uninitialized_variables
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -50,7 +52,7 @@ class Auth with ChangeNotifier {
         throw HttpException(responseData['error']);
       } else {
         final pref = await SharedPreferences.getInstance();
-        String jsonString = json.encode(responseData);
+        final jsonString = json.encode(responseData);
         pref.setString('key', jsonString);
       }
       notifyListeners();

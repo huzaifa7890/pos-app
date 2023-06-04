@@ -1,9 +1,10 @@
+// ignore_for_file: library_prefixes
+
 import 'package:flutter/material.dart';
-import '../components/c_elevated_button.dart';
 import '../utils/constants.dart' as Constants;
 
 class AuthForm extends StatefulWidget {
-  AuthForm(this.submitFn, this.isLoading);
+  const AuthForm(this.submitFn, this.isLoading, {super.key});
 
   final bool isLoading;
   final void Function(

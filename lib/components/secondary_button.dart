@@ -39,7 +39,7 @@ class _SecondaryButtonState extends State<SecondaryButton> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6),
         ),
-        padding: EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         backgroundColor: secondaryColor,
         textStyle: GoogleFonts.plusJakartaSans(
           fontSize: 16,

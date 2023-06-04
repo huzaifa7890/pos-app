@@ -1,3 +1,5 @@
+// ignore_for_file: library_prefixes
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -44,7 +46,7 @@ class Products with ChangeNotifier {
     final userpref = pref.getString('key');
     final extractedUserData = json.decode(userpref!) as Map<String, dynamic>;
     final token = extractedUserData['user']['token'];
-    final tenantid = extractedUserData['user']['tenant_id'];
+    final tenantid = extractedUserData['user']['tenant_id'].toString();
 
     final url = Uri.parse('${Constants.BASE_API_URL}/products');
     Map<String, String> headers = {
@@ -58,7 +60,8 @@ class Products with ChangeNotifier {
         headers: headers,
       );
       if (response.statusCode == 200) {
-        final respnsedata = jsonDecode(response.body.toString());
+        final responsedata = jsonDecode(response.body.toString());
+        final pid = responsedata['data'];
       } else {}
     } catch (error) {
       rethrow;
