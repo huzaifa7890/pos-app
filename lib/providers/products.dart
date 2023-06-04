@@ -5,11 +5,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pixelone/model/product_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/constants.dart' as Constants;
+import '../utils/constants.dart' as constants;
 import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
-  List<Product> _items = [];
+  final List<Product> _items = [];
 
   List<Product> get items {
     return [..._items];
@@ -48,7 +48,7 @@ class Products with ChangeNotifier {
     final token = extractedUserData['user']['token'];
     final tenantid = extractedUserData['user']['tenant_id'].toString();
 
-    final url = Uri.parse('${Constants.BASE_API_URL}/products');
+    final url = Uri.parse('${constants.BASE_API_URL}/products');
     Map<String, String> headers = {
       "content-type": "application/json",
       "Authorization": "Bearer $token",
