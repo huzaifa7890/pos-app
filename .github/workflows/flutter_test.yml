@@ -26,6 +26,10 @@ jobs:
         
       - name: Get packages
         run: flutter -v pub get
+
+      - name: Check Code formatting
+        run: dart format ./lib
+
       - name: Analyze code
         run: flutter analyze ./lib
 
