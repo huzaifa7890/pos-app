@@ -6,7 +6,7 @@ class Product {
   final double saleprice;
   final int sku;
   final int weight;
-  final int costprice;
+  final double costprice;
   final int barcode;
 
   Product({

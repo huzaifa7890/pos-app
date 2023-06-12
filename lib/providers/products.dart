@@ -48,7 +48,7 @@ class Products with ChangeNotifier {
     double pickedSaleprice,
     int pickedSku,
     int pickedweight,
-    int pickedCostprice,
+    double pickedCostprice,
     int pickedBarcode,
   ) async {
     final newProduct = Product(
@@ -101,7 +101,7 @@ class Products with ChangeNotifier {
             'store_id': objects[i]['store_id'],
             'store_name': objects[i]['store_name'],
             'weight': objects[i]['weight'],
-            'description': objects[i]['product_type'],
+            'description': objects[i]['store_name'],
             'costprice': objects[i]['tag_price'],
             'barcode': objects[i]['store_id']
           });
@@ -125,7 +125,7 @@ class Products with ChangeNotifier {
               saleprice: e['sale_price'],
               sku: e['product_sku'],
               weight: e['weight'],
-              description: e['product_type'],
+              description: e['store_name'],
               costprice: e['tag_price'],
               barcode: e['store_id']),
         )
