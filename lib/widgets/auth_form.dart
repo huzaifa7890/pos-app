@@ -1,7 +1,7 @@
 // ignore_for_file: library_prefixes
 
 import 'package:flutter/material.dart';
-import '../utils/constants.dart' as Constants;
+import '../utils/constants.dart' as constants;
 
 class AuthForm extends StatefulWidget {
   const AuthForm(this.submitFn, this.isLoading, {super.key});
@@ -65,12 +65,12 @@ class _AuthFormState extends State<AuthForm> {
                     key: const ValueKey('fullname'),
                     validator: (value) {
                       if (value!.isEmpty || value.length < 4) {
-                        return Constants.SH_FULL_NAME_ERROR;
+                        return constants.SH_FULL_NAME_ERROR;
                       }
                       return null;
                     },
                     decoration:
-                        const InputDecoration(hintText: Constants.HT_FULL_NAME),
+                        const InputDecoration(hintText: constants.HT_FULL_NAME),
                     onSaved: (value) {
                       _userName = value!;
                     },
@@ -80,12 +80,12 @@ class _AuthFormState extends State<AuthForm> {
                     key: const ValueKey('business'),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return Constants.SH_BUSINESS_ERROR;
+                        return constants.SH_BUSINESS_ERROR;
                       }
                       return null;
                     },
                     decoration: const InputDecoration(
-                        hintText: Constants.HT_BUSINESS_NAME),
+                        hintText: constants.HT_BUSINESS_NAME),
                     onSaved: (value) {
                       _business = value!;
                     },
@@ -94,13 +94,13 @@ class _AuthFormState extends State<AuthForm> {
                   key: const ValueKey('email'),
                   validator: (value) {
                     if (value!.isEmpty || !value.contains('@')) {
-                      return Constants.SH_EMAIL_ERROR;
+                      return constants.SH_EMAIL_ERROR;
                     }
                     return null;
                   },
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
-                      hintText: Constants.HT_EMAIL_ADDRESS),
+                      hintText: constants.HT_EMAIL_ADDRESS),
                   onSaved: (value) {
                     _userEmail = value!;
                   },
@@ -109,12 +109,12 @@ class _AuthFormState extends State<AuthForm> {
                   key: const ValueKey('password'),
                   validator: (value) {
                     if (value!.isEmpty || value.length < 6) {
-                      return Constants.SH_PASSWORD_ERROR;
+                      return constants.SH_PASSWORD_ERROR;
                     }
                     return null;
                   },
                   decoration:
-                      const InputDecoration(hintText: Constants.HT_PASSWORD),
+                      const InputDecoration(hintText: constants.HT_PASSWORD),
                   obscureText: true,
                   onSaved: (value) {
                     _userPassword = value!;
@@ -125,12 +125,12 @@ class _AuthFormState extends State<AuthForm> {
                     key: const ValueKey('phoneno'),
                     validator: (value) {
                       if (value!.isEmpty || value.length < 6) {
-                        return Constants.SH_PHONENO_ERROR;
+                        return constants.SH_PHONENO_ERROR;
                       }
                       return null;
                     },
                     decoration:
-                        const InputDecoration(hintText: Constants.HT_PHONE_NO),
+                        const InputDecoration(hintText: constants.HT_PHONE_NO),
                     keyboardType: TextInputType.number,
                     onSaved: (value) {
                       _phoneno = value!;

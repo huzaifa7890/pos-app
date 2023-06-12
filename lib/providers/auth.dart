@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../utils/constants.dart' as Constants;
+import '../utils/constants.dart' as constants;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../model/HttpException.dart';
+import '../model/http_exception.dart';
 
 class Auth with ChangeNotifier {
   String? _token;
@@ -41,7 +41,7 @@ class Auth with ChangeNotifier {
         "Accept": "application/json",
       };
       final response = await http.post(
-        Uri.parse('${Constants.BASE_API_URL}/auth/signup'),
+        Uri.parse('${constants.BASE_API_URL}/auth/signup'),
         headers: headers,
         body: json.encode(requestBody),
       );
@@ -71,7 +71,7 @@ class Auth with ChangeNotifier {
         "Accept": "application/json",
       };
       final response = await http.post(
-        Uri.parse('${Constants.BASE_API_URL}/auth/login'),
+        Uri.parse('${constants.BASE_API_URL}/auth/login'),
         headers: headers,
         body: json.encode(requestBody),
       );
