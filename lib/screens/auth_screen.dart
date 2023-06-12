@@ -1,11 +1,9 @@
-// ignore_for_file: library_prefixes, use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:pixelone/screens/homepage.dart';
 import '../model/http_exception.dart';
 import '../providers/auth.dart';
 import '../widgets/auth_form.dart';
-import '../utils/constants.dart' as Constants;
+import '../utils/constants.dart' as constants;
 import 'package:provider/provider.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -45,7 +43,7 @@ class _AuthScreenState extends State<AuthScreen> {
         );
       }
     } on HttpException catch (error) {
-      var errorMessage = Constants.HT_ERROR;
+      var errorMessage = constants.HT_ERROR;
       errorMessage = error.toString();
       ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
         content: Text(errorMessage),
@@ -55,7 +53,7 @@ class _AuthScreenState extends State<AuthScreen> {
         _isLoading = false;
       });
     } catch (error) {
-      var errorMessage = Constants.HT_ERROR;
+      var errorMessage = constants.HT_ERROR;
 
       errorMessage = error.toString();
 

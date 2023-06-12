@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import '../db_helper/product_db.dart';
 import '../model/product_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/constants.dart' as constants;
@@ -47,7 +48,7 @@ class Products with ChangeNotifier {
     double pickedSaleprice,
     int pickedSku,
     int pickedweight,
-    double pickedCostprice,
+    int pickedCostprice,
     int pickedBarcode,
   ) async {
     final newProduct = Product(
@@ -100,6 +101,9 @@ class Products with ChangeNotifier {
             'store_id': objects[i]['store_id'],
             'store_name': objects[i]['store_name'],
             'weight': objects[i]['weight'],
+            'description': objects[i]['product_type'],
+            'costprice': objects[i]['tag_price'],
+            'barcode': objects[i]['store_id']
           });
         }
       } else {}
@@ -115,13 +119,15 @@ class Products with ChangeNotifier {
     _items = dataList
         .map(
           (e) => Product(
-            id: e['product_id'],
-            name: e['product_name'],
-            price: e['tag_price'],
-            saleprice: e['sale_price'],
-            sku: e['product_sku'],
-            weight: e['weight'],
-          ),
+              id: e['product_id'],
+              name: e['product_name'],
+              price: e['tag_price'],
+              saleprice: e['sale_price'],
+              sku: e['product_sku'],
+              weight: e['weight'],
+              description: e['product_type'],
+              costprice: e['tag_price'],
+              barcode: e['store_id']),
         )
         .toList();
 

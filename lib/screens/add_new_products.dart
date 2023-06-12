@@ -58,7 +58,7 @@ class _AddNewProductsState extends State<AddNewProducts> {
       _salesPriceController.text as double,
       _skuController.text as int,
       _weightController.text as int,
-      _costPriceController.text as double,
+      _costPriceController.text as int,
       _barcodeController.text as int,
     );
   }

@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import '../widgets/app_drawer.dart';
@@ -33,10 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       drawer: const AppDrawer(),
       body: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: GridView.builder(
           itemCount: 9,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
             crossAxisSpacing: 16.0,
             mainAxisSpacing: 16.0,
@@ -55,10 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 64.0,
                     height: 64.0,
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Text(
                     'Title $index',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                     ),

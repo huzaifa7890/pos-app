@@ -8,7 +8,9 @@ import 'package:pixelone/screens/homepage.dart';
 import 'package:provider/provider.dart';
 
 import 'package:mockito/mockito.dart';
+
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
 class MockAuth extends Mock implements Auth {}
 
 void main() {
@@ -22,14 +24,6 @@ void main() {
     tearDown(() {
       clearInteractions(mockNavigatorObserver);
     });
-
-    Widget buildTestableWidget(Widget widget) {
-      return MaterialApp(
-        home: widget,
-        navigatorObservers: [mockNavigatorObserver],
-      );
-    }
-
 
 //   testWidgets('should navigate to home screen when "Home" is tapped', (WidgetTester tester) async {
 //     final mockObserver = MockNavigatorObserver();
@@ -54,74 +48,76 @@ void main() {
 //     expect(find.byType(HomeScreen), findsOneWidget);
 //   });
 
-  testWidgets('should navigate to order screen when "Orders" is tapped', (WidgetTester tester) async {
-    final mockAuth = MockAuth();
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider<Auth>.value(value: mockAuth),
-        ],
-        child: MaterialApp(
-          home: AppDrawer(),
-          routes: {
-            OrderScreen.routeName: (_) => OrderScreen(),
-          },
-        ),
-      ),
-    );
-
-    await tester.tap(find.text('Orders'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(OrderScreen), findsOneWidget);
-  });
-
-  testWidgets('should navigate to product screen when "Manage Product" is tapped',
-      (WidgetTester tester) async {
-        final mockAuth = MockAuth();
-        await tester.pumpWidget(
+    testWidgets('should navigate to order screen when "Orders" is tapped',
+        (WidgetTester tester) async {
+      final mockAuth = MockAuth();
+      await tester.pumpWidget(
         MultiProvider(
-            providers: [
+          providers: [
             ChangeNotifierProvider<Auth>.value(value: mockAuth),
-            ],
-            child: MaterialApp(
-            home: AppDrawer(),
+          ],
+          child: MaterialApp(
+            home: const AppDrawer(),
             routes: {
-                ProductScreen.routeName: (_) => ProductScreen(),
+              OrderScreen.routeName: (_) => const OrderScreen(),
             },
-            ),
+          ),
         ),
-        );
+      );
 
-        await tester.tap(find.byIcon(Icons.shop));
-        await tester.pumpAndSettle();
+      await tester.tap(find.text('Orders'));
+      await tester.pumpAndSettle();
 
-        expect(find.byType(ProductScreen), findsOneWidget);
-  });
+      expect(find.byType(OrderScreen), findsOneWidget);
+    });
 
-
-  testWidgets('should logout when "Logout" is tapped', (WidgetTester tester) async {
-    final mockAuth = MockAuth();
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider<Auth>.value(value: mockAuth),
-        ],
-        child: MaterialApp(
-          home: HomeScreen(),
+    testWidgets(
+        'should navigate to product screen when "Manage Product" is tapped',
+        (WidgetTester tester) async {
+      final mockAuth = MockAuth();
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<Auth>.value(value: mockAuth),
+          ],
+          child: MaterialApp(
+            home: const AppDrawer(),
+            routes: {
+              ProductScreen.routeName: (_) => const ProductScreen(),
+            },
+          ),
         ),
-      ),
-    );
+      );
 
-    // Simulate tapping on the "Logout" ListTile
-    // await tester.tap(find.text('Logout'));
-    await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(Icons.shop));
+      await tester.pumpAndSettle();
 
-    // Verify that the logout method was called on the Auth provider
-    // verify(mockAuth.logout()).called(1);
+      expect(find.byType(ProductScreen), findsOneWidget);
+    });
 
-    // Verify that the app navigates to the home screen
-    expect(find.byType(HomeScreen), findsOneWidget);
-  });
+    testWidgets('should logout when "Logout" is tapped',
+        (WidgetTester tester) async {
+      final mockAuth = MockAuth();
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<Auth>.value(value: mockAuth),
+          ],
+          child: const MaterialApp(
+            home: HomeScreen(),
+          ),
+        ),
+      );
+
+      // Simulate tapping on the "Logout" ListTile
+      // await tester.tap(find.text('Logout'));
+      await tester.pumpAndSettle();
+
+      // Verify that the logout method was called on the Auth provider
+      // verify(mockAuth.logout()).called(1);
+
+      // Verify that the app navigates to the home screen
+      expect(find.byType(HomeScreen), findsOneWidget);
+    });
   });
 }
