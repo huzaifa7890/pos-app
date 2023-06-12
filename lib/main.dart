@@ -5,6 +5,7 @@ import 'package:pixelone/screens/add_new_orders.dart';
 import 'package:pixelone/screens/add_new_products.dart';
 import 'package:pixelone/screens/homepage.dart';
 import 'package:pixelone/screens/order_screen.dart';
+import 'package:pixelone/screens/product_detail_screen.dart';
 import 'package:pixelone/screens/products_screen.dart';
 import 'package:pixelone/screens/splash_screen.dart';
 import 'package:pixelone/utils/constants.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
                           : const AuthScreen(),
                 ),
           routes: {
+            ProductDetailScreen.routeName: (ctx) => const ProductDetailScreen(),
             OrderScreen.routeName: (ctx) => const OrderScreen(),
             AddNewOders.routeName: (ctx) => const AddNewOders(),
             ProductScreen.routeName: (ctx) => const ProductScreen(),

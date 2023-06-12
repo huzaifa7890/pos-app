@@ -32,8 +32,42 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text("PixelOne"),
       ),
       drawer: const AppDrawer(),
-      body: const Center(
-        child: Text("HomePage"),
+      body: Container(
+        padding: EdgeInsets.all(16.0),
+        child: GridView.builder(
+          itemCount: 9,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: 16.0,
+            mainAxisSpacing: 16.0,
+          ),
+          itemBuilder: (context, index) {
+            return Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+                color: Colors.grey[200],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/products.png',
+                    width: 64.0,
+                    height: 64.0,
+                  ),
+                  SizedBox(height: 8.0),
+                  Text(
+                    'Title $index',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

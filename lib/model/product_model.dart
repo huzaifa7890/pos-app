@@ -1,23 +1,23 @@
 class Product {
-  final String id;
+  final int id;
   final String name;
-  final String description;
+  final description;
   final double price;
   final double saleprice;
-  final double sku;
-  final double weight;
-  final double costprice;
-  final String barcode;
+  final int sku;
+  final int weight;
+  final costprice;
+  final barcode;
 
   Product({
     required this.id,
     required this.name,
-    required this.description,
+    this.description,
     required this.price,
     required this.saleprice,
     required this.sku,
     required this.weight,
-    required this.costprice,
-    required this.barcode,
+    this.costprice,
+    this.barcode,
   });
 }
