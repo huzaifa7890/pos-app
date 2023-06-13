@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import '../db_helper/product_db.dart';
-import '../model/product_model.dart';
+import 'package:pixelone/db_helper/product_db.dart';
+import 'package:pixelone/model/product_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/constants.dart' as constants;
+import 'package:pixelone/utils/constants.dart' as constants;
 import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
@@ -134,7 +134,9 @@ class Products with ChangeNotifier {
                 barcode: e['store_id']),
           )
           .toList();
-    } catch (e) {}
+    } catch (e) {
+      rethrow;
+    }
     _isLoading = false;
     notifyListeners();
   }

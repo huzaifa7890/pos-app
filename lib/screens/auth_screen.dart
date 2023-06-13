@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:pixelone/screens/home_screen.dart';
-import '../model/http_exception.dart';
-import '../providers/auth.dart';
-import '../widgets/auth_form.dart';
-import '../utils/constants.dart' as constants;
+import 'package:pixelone/model/http_exception.dart';
+import 'package:pixelone/providers/auth.dart';
+import 'package:pixelone/widgets/auth_form.dart';
+import 'package:pixelone/utils/constants.dart' as constants;
 import 'package:provider/provider.dart';
 
 class AuthScreen extends StatefulWidget {

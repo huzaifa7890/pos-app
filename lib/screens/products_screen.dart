@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_products.dart';
 import 'package:provider/provider.dart';
-import 'package:pixelone/widgets/app_drawer.dart';
 import 'product_detail_screen.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -44,7 +43,6 @@ class _ProductScreenState extends State<ProductScreen> {
           ),
         ],
       ),
-      drawer: const AppDrawer(),
       body: Container(
         padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
         child: Column(

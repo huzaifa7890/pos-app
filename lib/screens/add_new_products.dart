@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
-import '../utils/constants.dart';
+import 'package:pixelone/utils/constants.dart';
 
 class AddNewProducts extends StatefulWidget {
   static const routeName = '/add-product';
