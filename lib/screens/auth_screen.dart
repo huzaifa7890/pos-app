@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:pixelone/screens/homepage.dart';
+import 'package:pixelone/screens/home_screen.dart';
 import '../model/http_exception.dart';
 import '../providers/auth.dart';
 import '../widgets/auth_form.dart';

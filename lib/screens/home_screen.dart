@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
-import '../widgets/app_drawer.dart';
+import 'package:pixelone/widgets/app_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+  static const routeName = '/';
 
   @override
   // ignore: library_private_types_in_public_api
@@ -28,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("PixelOne"),
+        title: const Text("Home"),
       ),
       drawer: const AppDrawer(),
       body: Container(

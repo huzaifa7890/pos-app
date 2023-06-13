@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pixelone/providers/auth.dart';
 import 'package:pixelone/screens/auth_screen.dart';
-import 'package:pixelone/screens/homepage.dart';
+import 'package:pixelone/screens/home_screen.dart';
 import 'package:pixelone/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:pixelone/main.dart';
