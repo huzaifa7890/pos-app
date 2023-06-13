@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:pixelone/screens/home_screen.dart';
 import 'package:pixelone/screens/products_screen.dart';
 import 'package:pixelone/providers/auth.dart';
-import 'package:pixelone/screens/order_screen.dart';
+import 'package:pixelone/screens/sales_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -31,7 +31,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.payment),
             title: const Text('Sales'),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(OrderScreen.routeName);
+              Navigator.of(context).pushReplacementNamed(SalesScreen.routeName);
             },
           ),
           const Divider(),

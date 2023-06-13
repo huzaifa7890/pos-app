@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_orders.dart';
-import 'package:pixelone/widgets/app_drawer.dart';
 import 'package:provider/provider.dart';
 
-class OrderScreen extends StatelessWidget {
-  const OrderScreen({super.key});
+class SalesScreen extends StatelessWidget {
+  const SalesScreen({super.key});
   static const routeName = '/orders';
   @override
   Widget build(BuildContext context) {
@@ -20,7 +19,6 @@ class OrderScreen extends StatelessWidget {
               icon: const Icon(Icons.add)),
         ],
       ),
-      drawer: const AppDrawer(),
       body: Column(
         children: [
           ElevatedButton(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:pixelone/model/homepageitems.dart';
 import 'package:pixelone/widgets/app_drawer.dart';
+import 'package:pixelone/widgets/homepageitems.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -25,6 +27,17 @@ class _HomeScreenState extends State<HomeScreen> {
     _getAvailableBiometrics();
   }
 
+  final List<ItemsData> items = [
+    ItemsData(title: 'Products', imagePath: 'assets/images/products.png'),
+    ItemsData(title: 'Purchase', imagePath: 'assets/images/purchase.png'),
+    ItemsData(title: 'Sales', imagePath: 'assets/images/sales.png'),
+    ItemsData(title: 'Profits', imagePath: 'assets/images/profit.png'),
+    ItemsData(title: 'Reports', imagePath: 'assets/images/reports.png'),
+    ItemsData(title: 'Stocks', imagePath: 'assets/images/profit.png'),
+    ItemsData(title: 'Expense', imagePath: 'assets/images/expense.png'),
+    ItemsData(title: 'Due List', imagePath: 'assets/images/duelist.png'),
+    ItemsData(title: 'Parties', imagePath: 'assets/images/sales.png'),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,42 +45,25 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text("Home"),
       ),
       drawer: const AppDrawer(),
-      body: Container(
-        padding: const EdgeInsets.all(16.0),
-        child: GridView.builder(
-          itemCount: 9,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 16.0,
-            mainAxisSpacing: 16.0,
-          ),
-          itemBuilder: (context, index) {
-            return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                color: Colors.grey[200],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/products.png',
-                    width: 64.0,
-                    height: 64.0,
-                  ),
-                  const SizedBox(height: 8.0),
-                  Text(
-                    'Title $index',
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
+      body: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          childAspectRatio: 0.7,
+          crossAxisSpacing: 5,
+          mainAxisSpacing: 2,
         ),
+        itemCount: items.length,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: () {
+              navigateToBoxPage(context, index);
+            },
+            child: HomePageItems(
+              title: items[index].title,
+              imagePath: items[index].imagePath,
+            ),
+          );
+        },
       ),
     );
   }
@@ -97,12 +93,29 @@ class _HomeScreenState extends State<HomeScreen> {
         if (!didAuthenticate) {}
       }
     } catch (e) {
-      // Handle the error here, e.g., display an error message or log the error
+      rethrow;
     }
   }
 
   void deviceCapability() async {
     final bool isCapable = await auth!.canCheckBiometrics;
     isDeviceSupport = isCapable || await auth!.isDeviceSupported();
+  }
+
+  void navigateToBoxPage(BuildContext context, int index) {
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/Products');
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/Purchase');
+        break;
+      case 2:
+        Navigator.pushNamed(context, '/Sales');
+        break;
+      // Add more cases for other boxes
+      default:
+        break;
+    }
   }
 }

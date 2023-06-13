@@ -1,20 +1,22 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import '../db_helper/product_db.dart';
-import '../model/product_model.dart';
+import 'package:pixelone/db_helper/product_db.dart';
+import 'package:pixelone/model/product_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/constants.dart' as constants;
+import 'package:pixelone/utils/constants.dart' as constants;
 import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  String searchText = '';
+
   List<Product> _items = [];
 
   List<Product> get items {
     return [..._items];
   }
-
-  String searchText = '';
 
   void setSearchText(String text) {
     searchText = text;
@@ -114,23 +116,28 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchingProductFromDB() async {
-    final dataList = await DBHelper.getData('productdata');
-
-    _items = dataList
-        .map(
-          (e) => Product(
-              id: e['product_id'],
-              name: e['product_name'],
-              price: e['tag_price'],
-              saleprice: e['sale_price'],
-              sku: e['product_sku'],
-              weight: e['weight'],
-              description: e['store_name'],
-              costprice: e['tag_price'],
-              barcode: e['store_id']),
-        )
-        .toList();
-
+    try {
+      _isLoading = true;
+      await Future.delayed(const Duration(milliseconds: 800));
+      final dataList = await DBHelper.getData('productdata');
+      _items = dataList
+          .map(
+            (e) => Product(
+                id: e['product_id'],
+                name: e['product_name'],
+                price: e['tag_price'],
+                saleprice: e['sale_price'],
+                sku: e['product_sku'],
+                weight: e['weight'],
+                description: e['store_name'],
+                costprice: e['tag_price'],
+                barcode: e['store_id']),
+          )
+          .toList();
+    } catch (e) {
+      rethrow;
+    }
+    _isLoading = false;
     notifyListeners();
   }
 }

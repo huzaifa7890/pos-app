@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../utils/constants.dart' as constants;
+import 'package:pixelone/utils/constants.dart' as constants;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../model/http_exception.dart';
+import 'package:pixelone/model/http_exception.dart';
 
 class Auth with ChangeNotifier {
   String? _token;

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/products_screen.dart';
 import 'package:pixelone/providers/auth.dart';
-import 'package:pixelone/screens/order_screen.dart';
+import 'package:pixelone/screens/sales_screen.dart';
 import 'package:pixelone/widgets/app_drawer.dart';
 import 'package:pixelone/screens/home_screen.dart';
 import 'package:provider/provider.dart';
@@ -67,7 +67,7 @@ void main() {
             child: const AppDrawer(),
           ),
           routes: {
-            OrderScreen.routeName: (_) => const OrderScreen(),
+            SalesScreen.routeName: (_) => const SalesScreen(),
           },
         ),
       );
@@ -75,7 +75,7 @@ void main() {
       await tester.tap(find.text('Sales'));
       await tester.pumpAndSettle();
 
-      expect(find.byType(OrderScreen), findsOneWidget);
+      expect(find.byType(SalesScreen), findsOneWidget);
     });
 
     testWidgets(
