@@ -2,33 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_products.dart';
 import 'package:provider/provider.dart';
-import '../widgets/app_drawer.dart';
+import 'package:pixelone/widgets/app_drawer.dart';
 import 'product_detail_screen.dart';
 
 class ProductScreen extends StatefulWidget {
   static const routeName = '/product';
-  const ProductScreen({super.key});
+
+  const ProductScreen({Key? key}) : super(key: key);
 
   @override
   State<ProductScreen> createState() => _ProductScreenState();
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-  String searchText = '';
+  late Products productProvider;
+
   @override
   void initState() {
-    Provider.of<Products>(context, listen: false).fetchingProductFromDB();
     super.initState();
+    // Delay the execution of fetchingProductFromDB using addPostFrameCallback
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      productProvider = Provider.of<Products>(context, listen: false);
+      productProvider.fetchingProductFromDB();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final productProvider = Provider.of<Products>(context);
+    productProvider = Provider.of<Products>(context);
 
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: const Text('Mange Products'),
+        title: const Text('Manage Products'),
         actions: [
           IconButton(
             onPressed: () {
@@ -86,18 +92,18 @@ class _ProductScreenState extends State<ProductScreen> {
                     itemCount: filteredList.length,
                     itemBuilder: (context, index) {
                       final product = filteredList[index];
-
                       return GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(
-                              ProductDetailScreen.routeName,
-                              arguments: product.id,
-                            );
-                          },
-                          child: ListTile(
-                            title: Text(product.name),
-                            subtitle: Text('Sale Price: ${product.saleprice}'),
-                          ));
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                            ProductDetailScreen.routeName,
+                            arguments: product.id,
+                          );
+                        },
+                        child: ListTile(
+                          title: Text(product.name),
+                          subtitle: Text('Sale Price: ${product.saleprice}'),
+                        ),
+                      );
                     },
                   );
                 },

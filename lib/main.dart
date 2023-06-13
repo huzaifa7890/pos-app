@@ -3,7 +3,7 @@ import 'package:pixelone/providers/auth.dart';
 import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_orders.dart';
 import 'package:pixelone/screens/add_new_products.dart';
-import 'package:pixelone/screens/homepage.dart';
+import 'package:pixelone/screens/home_screen.dart';
 import 'package:pixelone/screens/order_screen.dart';
 import 'package:pixelone/screens/product_detail_screen.dart';
 import 'package:pixelone/screens/products_screen.dart';

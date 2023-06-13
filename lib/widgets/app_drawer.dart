@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:pixelone/screens/home_screen.dart';
 import 'package:pixelone/screens/products_screen.dart';
 import 'package:pixelone/providers/auth.dart';
 import 'package:pixelone/screens/order_screen.dart';
@@ -22,13 +23,13 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.home),
             title: const Text('Home'),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed('/');
+              Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
             },
           ),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.payment),
-            title: const Text('Orders'),
+            title: const Text('Sales'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(OrderScreen.routeName);
             },
@@ -36,7 +37,7 @@ class AppDrawer extends StatelessWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.shop),
-            title: const Text('Manage Product'),
+            title: const Text('Products'),
             onTap: () {
               Navigator.of(context)
                   .pushReplacementNamed(ProductScreen.routeName);
