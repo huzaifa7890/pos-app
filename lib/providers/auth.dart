@@ -1,5 +1,3 @@
-// ignore_for_file: library_prefixes, prefer_typing_uninitialized_variables
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -10,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/http_exception.dart';
 
 class Auth with ChangeNotifier {
-  var _token;
+  String? _token;
 
   bool get isAuth {
     return token != null;

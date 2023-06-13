@@ -1,13 +1,13 @@
 class Product {
-  final String id;
+  final int id;
   final String name;
   final String description;
   final double price;
   final double saleprice;
-  final double sku;
-  final double weight;
+  final int sku;
+  final int weight;
   final double costprice;
-  final String barcode;
+  final int barcode;
 
   Product({
     required this.id,

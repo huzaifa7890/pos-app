@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_orders.dart';
 import 'package:pixelone/widgets/app_drawer.dart';
+import 'package:provider/provider.dart';
 
 class OrderScreen extends StatelessWidget {
   const OrderScreen({super.key});
@@ -9,7 +11,7 @@ class OrderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Orders'),
+        title: const Text('Sales'),
         actions: [
           IconButton(
               onPressed: () {
@@ -19,7 +21,16 @@ class OrderScreen extends StatelessWidget {
         ],
       ),
       drawer: const AppDrawer(),
-      body: const Center(child: Text('There Is No Order To Display')),
+      body: Column(
+        children: [
+          ElevatedButton(
+              onPressed: () {
+                Provider.of<Products>(context, listen: false)
+                    .storingDataInDbFromAPI();
+              },
+              child: const Text('update'))
+        ],
+      ),
     );
   }
 }
