@@ -70,7 +70,18 @@ class _ProductScreenState extends State<ProductScreen> {
               child: Consumer<Products>(
                 builder: (context, productProvider, _) {
                   final filteredList = productProvider.getFilteredProducts();
+                  final isLoading = productProvider.isLoading;
+                  if (isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
 
+                  if (filteredList.isEmpty) {
+                    return const Center(
+                      child: Text("No Product to Show"),
+                    );
+                  }
                   return ListView.builder(
                     itemCount: filteredList.length,
                     itemBuilder: (context, index) {
