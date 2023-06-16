@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pixelone/providers/auth.dart';
 import 'package:pixelone/providers/products.dart';
+import 'package:pixelone/screens/add_new_products.dart';
 import 'package:pixelone/screens/home_screen.dart';
+import 'package:pixelone/screens/product_detail_screen.dart';
 import 'package:pixelone/screens/sales_screen.dart';
 import 'package:pixelone/screens/products_screen.dart';
 import 'package:pixelone/screens/splash_screen.dart';
@@ -57,6 +59,9 @@ class MyApp extends StatelessWidget {
             '/Purchase': (context) => const SalesScreen(),
             '/Sales': (context) => const SalesScreen(),
             // Add more routes for other boxes
+
+            ProductDetailScreen.routeName: (ctx) => const ProductDetailScreen(),
+            AddNewProducts.routeName: (ctx) => const AddNewProducts(),
           },
         ),
       ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_products.dart';
+import 'package:pixelone/utils/constants.dart' as constant;
 import 'package:provider/provider.dart';
+import '../model/http_exception.dart';
 import 'product_detail_screen.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -15,11 +17,12 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   late Products productProvider;
+  bool isRefreshing = false;
 
   @override
   void initState() {
     super.initState();
-    // Delay the execution of fetchingProductFromDB using addPostFrameCallback
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       productProvider = Provider.of<Products>(context, listen: false);
       productProvider.fetchingProductFromDB();
@@ -29,7 +32,7 @@ class _ProductScreenState extends State<ProductScreen> {
   @override
   Widget build(BuildContext context) {
     productProvider = Provider.of<Products>(context);
-
+    final filteredList = productProvider.getFilteredProducts();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -57,15 +60,25 @@ class _ProductScreenState extends State<ProductScreen> {
                       labelText: 'Search',
                       prefixIcon: Icon(Icons.search),
                     ),
-                    onChanged: (value) {
-                      productProvider.setSearchText(value);
-                    },
+                    enabled: filteredList.isNotEmpty,
+                    onChanged: filteredList.isEmpty
+                        ? null
+                        : (value) {
+                            productProvider.setSearchText(value);
+                          },
                   ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.refresh),
                   onPressed: () {
-                    productProvider.fetchingProductFromDB();
+                    setState(() {
+                      isRefreshing = true;
+                    });
+                    productProvider.fetchingProductFromDB().then((_) {
+                      setState(() {
+                        isRefreshing = false;
+                      });
+                    });
                   },
                 ),
               ],
@@ -73,17 +86,57 @@ class _ProductScreenState extends State<ProductScreen> {
             Expanded(
               child: Consumer<Products>(
                 builder: (context, productProvider, _) {
-                  final filteredList = productProvider.getFilteredProducts();
                   final isLoading = productProvider.isLoading;
-                  if (isLoading) {
+                  if (isLoading || isRefreshing) {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
 
                   if (filteredList.isEmpty) {
-                    return const Center(
-                      child: Text("No Product to Show"),
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(constant.T_ERROR),
+                        ElevatedButton(
+                          onPressed: () async {
+                            try {
+                              setState(() {
+                                isRefreshing = true;
+                              });
+                              await productProvider.storingDataInDbFromAPI();
+                              setState(() {
+                                isRefreshing = false;
+                              });
+                            } on HttpException catch (error) {
+                              var errorMessage = constant.HT_ERROR;
+                              errorMessage = error.toString();
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(errorMessage),
+                                backgroundColor: Colors.black,
+                              ));
+                              setState(() {
+                                isRefreshing = false;
+                              });
+                            } catch (error) {
+                              var errorMessage = constant.HT_ERROR;
+
+                              errorMessage = error.toString();
+
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(errorMessage),
+                                backgroundColor: Colors.black,
+                              ));
+                              setState(() {
+                                isRefreshing = false;
+                              });
+                            }
+                          },
+                          child: const Text("Add Product"),
+                        ),
+                      ],
                     );
                   }
                   return ListView.builder(

@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pixelone/utils/constants.dart' as constants;
 import 'package:http/http.dart' as http;
 
+import '../model/http_exception.dart';
+
 class Products with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -92,23 +94,31 @@ class Products with ChangeNotifier {
         Map<String, dynamic> data = jsonDecode(jsonData);
 
         List<dynamic> objects = data['data'];
+        if (objects.isEmpty) {
+          throw HttpException(constants.SCAFFOLD_ERROR);
+        } else {
+          String jsonData = response.body.toString();
+          Map<String, dynamic> data = jsonDecode(jsonData);
 
-        for (var i = 0; i < objects.length; i++) {
-          DBHelper.insert({
-            'product_id': objects[i]['product_id'],
-            'product_sku': objects[i]['product_sku'],
-            'tag_price': objects[i]['tag_price'],
-            'sale_price': objects[i]['sale_price'],
-            'product_name': objects[i]['product_name'],
-            'store_id': objects[i]['store_id'],
-            'store_name': objects[i]['store_name'],
-            'weight': objects[i]['weight'],
-            'description': objects[i]['store_name'],
-            'costprice': objects[i]['tag_price'],
-            'barcode': objects[i]['store_id']
-          });
+          List<dynamic> objects = data['data'];
+
+          for (var i = 0; i < objects.length; i++) {
+            DBHelper.insert({
+              'product_id': objects[i]['product_id'],
+              'product_sku': objects[i]['product_sku'],
+              'tag_price': objects[i]['tag_price'],
+              'sale_price': objects[i]['sale_price'],
+              'product_name': objects[i]['product_name'],
+              'store_id': objects[i]['store_id'],
+              'store_name': objects[i]['store_name'],
+              'weight': objects[i]['weight'],
+              'description': objects[i]['store_name'],
+              'costprice': objects[i]['tag_price'],
+              'barcode': objects[i]['store_id']
+            });
+          }
         }
-      } else {}
+      }
     } catch (error) {
       rethrow;
     }
