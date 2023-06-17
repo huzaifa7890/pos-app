@@ -60,8 +60,8 @@ class _ProductScreenState extends State<ProductScreen> {
                       labelText: 'Search',
                       prefixIcon: Icon(Icons.search),
                     ),
-                    enabled: filteredList.isNotEmpty,
-                    onChanged: filteredList.isEmpty
+                    enabled: productProvider.items.isNotEmpty,
+                    onChanged: productProvider.items.isEmpty
                         ? null
                         : (value) {
                             productProvider.setSearchText(value);
@@ -93,7 +93,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     );
                   }
 
-                  if (filteredList.isEmpty) {
+                  if (productProvider.items.isEmpty) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -105,6 +105,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 isRefreshing = true;
                               });
                               await productProvider.storingDataInDbFromAPI();
+                              await productProvider.fetchingProductFromDB();
                               setState(() {
                                 isRefreshing = false;
                               });
