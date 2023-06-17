@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:pixelone/model/homepageitems.dart';
-import 'package:pixelone/widgets/app_drawer.dart';
 import 'package:pixelone/widgets/homepageitems.dart';
+import 'package:provider/provider.dart';
+import 'package:pixelone/providers/auth.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
-  static const routeName = '/';
 
   @override
   // ignore: library_private_types_in_public_api
@@ -42,13 +42,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: const [
+          LogoutButton(),
+        ],
         title: const Text("Home"),
       ),
-      drawer: const AppDrawer(),
       body: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          childAspectRatio: 0.7,
+          childAspectRatio: 0.9,
           crossAxisSpacing: 5,
           mainAxisSpacing: 2,
         ),
@@ -117,5 +119,21 @@ class _HomeScreenState extends State<HomeScreen> {
       default:
         break;
     }
+  }
+}
+
+class LogoutButton extends StatelessWidget {
+  const LogoutButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.logout),
+      onPressed: () {
+        Navigator.of(context).pop;
+        Navigator.of(context).pushReplacementNamed('/');
+        Provider.of<Auth>(context, listen: false).logout();
+      },
+    );
   }
 }

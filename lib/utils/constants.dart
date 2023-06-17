@@ -114,3 +114,7 @@ const String SH_PHONENO_ERROR = "Please Enter Phone Number";
 
 // Authentication Errors
 const String HT_ERROR = "Could not authenticate you. Please try again later.";
+
+// Empty Product Errors
+const String T_ERROR = "There is No Product To Show Try TO Add From PixelOne ";
+const String SCAFFOLD_ERROR = "No Product On PixelOne Try TO Add Some Product";
