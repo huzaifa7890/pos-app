@@ -29,6 +29,10 @@ class _ProductScreenState extends State<ProductScreen> {
     });
   }
 
+  Future<void> _refreshProducts() async {
+    await productProvider.fetchingProductFromDB();
+  }
+
   @override
   Widget build(BuildContext context) {
     productProvider = Provider.of<Products>(context);
@@ -84,81 +88,84 @@ class _ProductScreenState extends State<ProductScreen> {
               ],
             ),
             Expanded(
-              child: Consumer<Products>(
-                builder: (context, productProvider, _) {
-                  final isLoading = productProvider.isLoading;
-                  if (isLoading || isRefreshing) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-
-                  if (productProvider.items.isEmpty) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(constant.T_ERROR),
-                        ElevatedButton(
-                          onPressed: () async {
-                            try {
-                              setState(() {
-                                isRefreshing = true;
-                              });
-                              await productProvider.storingDataInDbFromAPI();
-                              await productProvider.fetchingProductFromDB();
-                              setState(() {
-                                isRefreshing = false;
-                              });
-                            } on HttpException catch (error) {
-                              var errorMessage = constant.HT_ERROR;
-                              errorMessage = error.toString();
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(errorMessage),
-                                backgroundColor: Colors.black,
-                              ));
-                              setState(() {
-                                isRefreshing = false;
-                              });
-                            } catch (error) {
-                              var errorMessage = constant.HT_ERROR;
-
-                              errorMessage = error.toString();
-
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(errorMessage),
-                                backgroundColor: Colors.black,
-                              ));
-                              setState(() {
-                                isRefreshing = false;
-                              });
-                            }
-                          },
-                          child: const Text("Add Product"),
-                        ),
-                      ],
-                    );
-                  }
-                  return ListView.builder(
-                    itemCount: filteredList.length,
-                    itemBuilder: (context, index) {
-                      final product = filteredList[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pushNamed(
-                            ProductDetailScreen.routeName,
-                            arguments: product.id,
-                          );
-                        },
-                        child: ListTile(
-                          title: Text(product.name),
-                          subtitle: Text('Sale Price: ${product.saleprice}'),
-                        ),
+              child: RefreshIndicator(
+                onRefresh: _refreshProducts,
+                child: Consumer<Products>(
+                  builder: (context, productProvider, _) {
+                    final isLoading = productProvider.isLoading;
+                    if (isLoading || isRefreshing) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
                       );
-                    },
-                  );
-                },
+                    }
+
+                    if (productProvider.items.isEmpty) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(constant.T_ERROR),
+                          ElevatedButton(
+                            onPressed: () async {
+                              try {
+                                setState(() {
+                                  isRefreshing = true;
+                                });
+                                await productProvider.storingDataInDbFromAPI();
+                                await productProvider.fetchingProductFromDB();
+                                setState(() {
+                                  isRefreshing = false;
+                                });
+                              } on HttpException catch (error) {
+                                var errorMessage = constant.HT_ERROR;
+                                errorMessage = error.toString();
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(errorMessage),
+                                  backgroundColor: Colors.black,
+                                ));
+                                setState(() {
+                                  isRefreshing = false;
+                                });
+                              } catch (error) {
+                                var errorMessage = constant.HT_ERROR;
+
+                                errorMessage = error.toString();
+
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(errorMessage),
+                                  backgroundColor: Colors.black,
+                                ));
+                                setState(() {
+                                  isRefreshing = false;
+                                });
+                              }
+                            },
+                            child: const Text("Add Product"),
+                          ),
+                        ],
+                      );
+                    }
+                    return ListView.builder(
+                      itemCount: filteredList.length,
+                      itemBuilder: (context, index) {
+                        final product = filteredList[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                              ProductDetailScreen.routeName,
+                              arguments: product.id,
+                            );
+                          },
+                          child: ListTile(
+                            title: Text(product.name),
+                            subtitle: Text('Sale Price: ${product.saleprice}'),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ),
           ],
