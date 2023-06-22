@@ -159,7 +159,8 @@ class _ProductScreenState extends State<ProductScreen> {
                           },
                           child: ListTile(
                             title: Text(product.name),
-                            subtitle: Text('Sale Price: ${product.saleprice}'),
+                            subtitle: Text(
+                                'Sale Price: ${product.saleprice} Quantity:${product.quantity}'),
                           ),
                         );
                       },

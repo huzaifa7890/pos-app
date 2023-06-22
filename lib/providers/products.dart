@@ -13,11 +13,29 @@ class Products with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   String searchText = '';
-
+  bool showProducts = false;
   List<Product> _items = [];
 
   List<Product> get items {
     return [..._items];
+  }
+
+  List<Product> _cartItems = [];
+
+  List<Product> get cartItems => _cartItems;
+
+  void addToCart(Product product) {
+    final existingProductIndex =
+        _cartItems.indexWhere((item) => item.id == product.id);
+
+    if (existingProductIndex != -1) {
+      _cartItems[existingProductIndex]
+          .quantity++; // Increase quantity if product already exists
+    } else {
+      _cartItems.add(product); // Add as a new item if product doesn't exist
+    }
+
+    notifyListeners();
   }
 
   void setSearchText(String text) {
@@ -25,9 +43,26 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
+  void clearCart() {
+    _cartItems.clear();
+    notifyListeners();
+  }
+
   List<Product> getFilteredProducts() {
     if (searchText.isEmpty) {
       return items;
+    } else {
+      final lowercaseSearchText = searchText.toLowerCase();
+      return items
+          .where((product) =>
+              product.name.toLowerCase().contains(lowercaseSearchText))
+          .toList();
+    }
+  }
+
+  List<Product> getFilteredCartProducts() {
+    if (!showProducts) {
+      return [];
     } else {
       final lowercaseSearchText = searchText.toLowerCase();
       return items
@@ -60,6 +95,7 @@ class Products with ChangeNotifier {
       name: pickedName,
       description: pickedDescription,
       price: pickedPrice,
+      quantity: pickedSku,
       saleprice: pickedSaleprice,
       sku: pickedSku,
       weight: pickedweight,
@@ -107,6 +143,7 @@ class Products with ChangeNotifier {
               'product_id': objects[i]['product_id'],
               'product_sku': objects[i]['product_sku'],
               'tag_price': objects[i]['tag_price'],
+              'product_quantity': "25",
               'sale_price': objects[i]['sale_price'],
               'product_name': objects[i]['product_name'],
               'store_id': objects[i]['store_id'],
@@ -136,6 +173,7 @@ class Products with ChangeNotifier {
                 id: e['product_id'],
                 name: e['product_name'],
                 price: e['tag_price'],
+                quantity: e['product_quantity'],
                 saleprice: e['sale_price'],
                 sku: e['product_sku'],
                 weight: e['weight'],

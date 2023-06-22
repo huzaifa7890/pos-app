@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "posapp" "\0"
+            VALUE "FileDescription", "pixelone" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "posapp" "\0"
+            VALUE "InternalName", "pixelone" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "posapp.exe" "\0"
-            VALUE "ProductName", "posapp" "\0"
+            VALUE "OriginalFilename", "pixelone.exe" "\0"
+            VALUE "ProductName", "pixelone" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

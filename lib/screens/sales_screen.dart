@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:pixelone/model/product_model.dart';
+import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_orders.dart';
+import 'package:pixelone/screens/addingtocart_screen.dart';
+import 'package:provider/provider.dart';
 
 class SalesScreen extends StatelessWidget {
   const SalesScreen({super.key});
   static const routeName = '/orders';
   @override
   Widget build(BuildContext context) {
+    Products productProvider = Provider.of<Products>(context);
+    List<Product> filteredProducts = productProvider.getFilteredCartProducts();
+    List<Product> cartItems = productProvider.cartItems;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sales'),
@@ -61,53 +69,93 @@ class SalesScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Search Product',
-                ),
+              padding: EdgeInsets.all(10.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      onChanged: (value) =>
+                          productProvider.setSearchText(value),
+                      decoration: InputDecoration(labelText: 'Search Product'),
+                    ),
+                  ),
+                  SizedBox(width: 10.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      productProvider.clearCart();
+                    },
+                    child: Text('Clear'),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 20.0),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1),
+                  borderRadius: BorderRadius.circular(50)),
+              child: Column(children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AddingToCartScreen()),
+                    );
+                  },
+                  child: const Text('Add Items'),
+                ),
+              ]),
+            ),
+            SizedBox(height: 20.0),
+            Text('Cart Items'),
             Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  border: TableBorder.all(width: 1),
-                  columns: const [
-                    DataColumn(label: Text('Product Name')),
-                    DataColumn(label: Text('Price')),
-                    DataColumn(label: Text('Quantity')),
-                    DataColumn(label: Text('Subtotal')),
-                    DataColumn(label: Icon(Icons.delete_outline)),
-                  ],
-                  rows: [
-                    DataRow(cells: [
-                      const DataCell(Text('Product 1')),
-                      const DataCell(Text('10.00')),
-                      const DataCell(Text('2')),
-                      const DataCell(Text('20.00')),
-                      DataCell(IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {},
-                      )),
-                    ]),
-                    DataRow(cells: [
-                      const DataCell(Text('Product 2')),
-                      const DataCell(Text('15.00')),
-                      const DataCell(Text('1')),
-                      const DataCell(Text('15.00')),
-                      DataCell(IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {},
-                      )),
-                    ]),
-                    // Add more rows as needed
-                  ],
-                ),
+              child: ListView.builder(
+                itemCount: cartItems.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Product product = cartItems[index];
+                  return ListTile(
+                    title: Text(product.name),
+                    subtitle: Text('Quantity: ${product.quantity}'),
+                  );
+                },
               ),
             ),
+            // Container(
+            //   padding: EdgeInsets.all(10.0),
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(10.0),
+            //     border: Border.all(color: Colors.grey),
+            //   ),
+            //   child: Column(
+            //     children: [
+            //       Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //         children: [
+            //           Text('Subtotal'),
+            //           Text('\$35.00'), // Replace with actual subtotal value
+            //         ],
+            //       ),
+            //       SizedBox(height: 10.0),
+            //       Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //         children: [
+            //           Text('Discount Amount'),
+            //           Text(
+            //               '-\$5.00'), // Replace with actual discount amount value
+            //         ],
+            //       ),
+            //       SizedBox(height: 10.0),
+            //       Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //         children: [
+            //           Text('Total Amount'),
+            //           Text('\$30.00'), // Replace with actual total amount value
+            //         ],
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),
