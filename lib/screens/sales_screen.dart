@@ -116,11 +116,34 @@ class SalesScreen extends StatelessWidget {
                   Product product = cartItems[index];
                   return ListTile(
                     title: Text(product.name),
-                    subtitle: Text('Quantity: ${product.quantity}'),
+                    subtitle: Text('Price: ${product.price}'),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            // Decrease quantity
+
+                            // You can also perform any additional operations or updates related to decreasing the quantity
+                          },
+                          icon: const Icon(Icons.remove),
+                        ),
+                        Text(product.quantity.toString()),
+                        IconButton(
+                          onPressed: () {
+                            // Increase quantity
+                            productProvider.addToCart(product);
+                            // You can also perform any additional operations or updates related to increasing the quantity
+                          },
+                          icon: const Icon(Icons.add),
+                        ),
+                      ],
+                    ),
                   );
                 },
               ),
             ),
+
             // Container(
             //   padding: EdgeInsets.all(10.0),
             //   decoration: BoxDecoration(

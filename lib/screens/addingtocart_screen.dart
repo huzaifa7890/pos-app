@@ -39,6 +39,8 @@ class _AddingToCartScreenState extends State<AddingToCartScreen> {
       setState(() {
         barcodeResult = barcode;
       });
+      // productProvider.addToCartByBarcode(barcode);
+      // Navigator.of(context).pop();
     } catch (e) {
       setState(() {
         barcodeResult = 'Scan failed: $e';
@@ -154,7 +156,10 @@ class _AddingToCartScreenState extends State<AddingToCartScreen> {
                     itemBuilder: (context, index) {
                       final product = filteredList[index];
                       return GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          productProvider.addToCart(product);
+                          Navigator.of(context).pop();
+                        },
                         child: ListTile(
                           title: Text(product.name),
                           subtitle: Text(

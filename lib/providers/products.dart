@@ -29,13 +29,21 @@ class Products with ChangeNotifier {
         _cartItems.indexWhere((item) => item.id == product.id);
 
     if (existingProductIndex != -1) {
-      _cartItems[existingProductIndex]
-          .quantity++; // Increase quantity if product already exists
+      _cartItems[existingProductIndex].quantity++;
     } else {
-      _cartItems.add(product); // Add as a new item if product doesn't exist
+      _cartItems.add(product);
     }
 
     notifyListeners();
+  }
+
+  void addToCartByBarcode(String barcode) {
+    final product = _items.firstWhere((product) => product.barcode == barcode);
+
+    if (product != null) {
+      _cartItems.add(product);
+      notifyListeners();
+    }
   }
 
   void setSearchText(String text) {
@@ -143,7 +151,6 @@ class Products with ChangeNotifier {
               'product_id': objects[i]['product_id'],
               'product_sku': objects[i]['product_sku'],
               'tag_price': objects[i]['tag_price'],
-              'product_quantity': "25",
               'sale_price': objects[i]['sale_price'],
               'product_name': objects[i]['product_name'],
               'store_id': objects[i]['store_id'],
@@ -165,7 +172,7 @@ class Products with ChangeNotifier {
   Future<void> fetchingProductFromDB() async {
     try {
       _isLoading = true;
-      await Future.delayed(const Duration(milliseconds: 800));
+      // await Future.delayed(const Duration(milliseconds: 300));
       final dataList = await DBHelper.getData('productdata');
       _items = dataList
           .map(
@@ -173,7 +180,6 @@ class Products with ChangeNotifier {
                 id: e['product_id'],
                 name: e['product_name'],
                 price: e['tag_price'],
-                quantity: e['product_quantity'],
                 saleprice: e['sale_price'],
                 sku: e['product_sku'],
                 weight: e['weight'],
