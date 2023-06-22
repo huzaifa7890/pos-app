@@ -39,11 +39,11 @@ class _AddingToCartScreenState extends State<AddingToCartScreen> {
       setState(() {
         barcodeResult = barcode;
       });
-      // productProvider.addToCartByBarcode(barcode);
-      // Navigator.of(context).pop();
+      productProvider.addToCartByBarcode(barcode);
+      Navigator.of(context).pop();
     } catch (e) {
       setState(() {
-        barcodeResult = 'Scan failed: $e';
+        barcodeResult = 'Scan failed: No Product With This Barcode';
       });
     }
   }

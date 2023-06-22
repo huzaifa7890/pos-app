@@ -38,8 +38,10 @@ class Products with ChangeNotifier {
   }
 
   void addToCartByBarcode(String barcode) {
+    // ignore: unrelated_type_equality_checks
     final product = _items.firstWhere((product) => product.barcode == barcode);
 
+    // ignore: unnecessary_null_comparison
     if (product != null) {
       _cartItems.add(product);
       notifyListeners();
@@ -158,7 +160,7 @@ class Products with ChangeNotifier {
               'weight': objects[i]['weight'],
               'description': objects[i]['store_name'],
               'costprice': objects[i]['tag_price'],
-              'barcode': objects[i]['store_id']
+              'barcode': objects[i]['product_sku']
             });
           }
         }
@@ -185,7 +187,7 @@ class Products with ChangeNotifier {
                 weight: e['weight'],
                 description: e['store_name'],
                 costprice: e['tag_price'],
-                barcode: e['store_id']),
+                barcode: e['product_sku']),
           )
           .toList();
     } catch (e) {

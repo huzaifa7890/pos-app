@@ -97,6 +97,7 @@ class _AuthFormState extends State<AuthForm> {
                     return null;
                   },
                   keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
                       hintText: constants.HT_EMAIL_ADDRESS),
                   onSaved: (value) {
@@ -105,6 +106,7 @@ class _AuthFormState extends State<AuthForm> {
                 ),
                 TextFormField(
                   key: const ValueKey('password'),
+                  textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (value!.isEmpty || value.length < 6) {
                       return constants.SH_PASSWORD_ERROR;
