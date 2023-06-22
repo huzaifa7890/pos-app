@@ -11,7 +11,6 @@ class SalesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Products productProvider = Provider.of<Products>(context);
-    List<Product> filteredProducts = productProvider.getFilteredCartProducts();
     List<Product> cartItems = productProvider.cartItems;
 
     return Scaffold(
@@ -69,22 +68,23 @@ class SalesScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               child: Row(
                 children: [
                   Expanded(
                     child: TextFormField(
                       onChanged: (value) =>
                           productProvider.setSearchText(value),
-                      decoration: InputDecoration(labelText: 'Search Product'),
+                      decoration:
+                          const InputDecoration(labelText: 'Search Product'),
                     ),
                   ),
-                  SizedBox(width: 10.0),
+                  const SizedBox(width: 10.0),
                   ElevatedButton(
                     onPressed: () {
                       productProvider.clearCart();
                     },
-                    child: Text('Clear'),
+                    child: const Text('Clear'),
                   ),
                 ],
               ),
@@ -107,8 +107,8 @@ class SalesScreen extends StatelessWidget {
                 ),
               ]),
             ),
-            SizedBox(height: 20.0),
-            Text('Cart Items'),
+            const SizedBox(height: 20.0),
+            const Text('Cart Items'),
             Expanded(
               child: ListView.builder(
                 itemCount: cartItems.length,

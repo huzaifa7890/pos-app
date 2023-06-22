@@ -20,7 +20,7 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
-  List<Product> _cartItems = [];
+  final List<Product> _cartItems = [];
 
   List<Product> get cartItems => _cartItems;
 

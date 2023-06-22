@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:pixelone/model/http_exception.dart';
 import 'package:pixelone/providers/products.dart';
@@ -89,7 +88,7 @@ class _AddingToCartScreenState extends State<AddingToCartScreen> {
           ),
           Text(
             barcodeResult,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Expanded(
             child: RefreshIndicator(
