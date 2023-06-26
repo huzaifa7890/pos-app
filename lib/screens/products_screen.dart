@@ -158,6 +158,12 @@ class _ProductScreenState extends State<ProductScreen> {
                             );
                           },
                           child: ListTile(
+                            leading: CircleAvatar(
+                              child: Image.network(
+                                product.imageurl,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                             title: Text(product.name),
                             subtitle: Text(
                                 'Sale Price: ${product.saleprice} Quantity:${product.quantity}'),

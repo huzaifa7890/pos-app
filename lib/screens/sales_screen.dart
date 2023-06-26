@@ -13,6 +13,13 @@ class SalesScreen extends StatelessWidget {
     Products productProvider = Provider.of<Products>(context);
     List<Product> cartItems = productProvider.cartItems;
 
+    double subtotal = productProvider.calculateSubtotal();
+    double discount = productProvider.discount;
+    double total = subtotal - discount;
+    double paidAmount = productProvider.paidAmount;
+    double returnAmount = productProvider.returnAmount(total);
+    double dueAmount = productProvider.dueAmount(total);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sales'),
@@ -24,59 +31,40 @@ class SalesScreen extends StatelessWidget {
               icon: const Icon(Icons.add)),
         ],
       ),
-      body: Container(
-        margin: const EdgeInsets.all(10.0),
-        padding: const EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          border: Border.all(color: Colors.grey),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      keyboardType: TextInputType.name,
-                      decoration: const InputDecoration(
-                        labelText: 'Walk-in Customer',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10.0),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.add),
-                  ),
-                  const SizedBox(width: 10.0),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.remove),
-                  ),
-                ],
+      body: SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            border: Border.all(color: Colors.grey),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextFormField(
+                keyboardType: TextInputType.name,
+                decoration: const InputDecoration(
+                  labelText: 'Walk-in Customer',
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: TextFormField(
+              const SizedBox(height: 10.0),
+              TextFormField(
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Warehouse',
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
+              const SizedBox(height: 10.0),
+              Row(
                 children: [
                   Expanded(
                     child: TextFormField(
                       onChanged: (value) =>
                           productProvider.setSearchText(value),
-                      decoration:
-                          const InputDecoration(labelText: 'Search Product'),
+                      decoration: const InputDecoration(
+                        labelText: 'Search Product',
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10.0),
@@ -88,98 +76,218 @@ class SalesScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1),
-                  borderRadius: BorderRadius.circular(50)),
-              child: Column(children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const AddingToCartScreen()),
-                    );
-                  },
-                  child: const Text('Add Items'),
+              const SizedBox(height: 20.0),
+              if (cartItems.isNotEmpty)
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(1),
+                      color: Colors.grey),
+                  child: const Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(
+                              'Cart Items',
+                              style: TextStyle(
+                                  fontSize: 18.0, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(right: 70),
+                            child: Text(
+                              'Quantity',
+                              style: TextStyle(
+                                  fontSize: 18.0, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ]),
-            ),
-            const SizedBox(height: 20.0),
-            const Text('Cart Items'),
-            Expanded(
-              child: ListView.builder(
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: cartItems.length,
                 itemBuilder: (BuildContext context, int index) {
                   Product product = cartItems[index];
+                  double subtotal = product.price * product.quantity;
+
                   return ListTile(
                     title: Text(product.name),
-                    subtitle: Text('Price: ${product.price}'),
+                    subtitle: Text(
+                      '${product.quantity} x ${product.price} = $subtotal',
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
                           onPressed: () {
-                            // Decrease quantity
-
-                            // You can also perform any additional operations or updates related to decreasing the quantity
+                            productProvider.decreaseQuantity(product);
                           },
                           icon: const Icon(Icons.remove),
                         ),
                         Text(product.quantity.toString()),
                         IconButton(
                           onPressed: () {
-                            // Increase quantity
                             productProvider.addToCart(product);
-                            // You can also perform any additional operations or updates related to increasing the quantity
                           },
                           icon: const Icon(Icons.add),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            productProvider.removeFromCart(product);
+                          },
+                          icon: const Icon(Icons.delete),
                         ),
                       ],
                     ),
                   );
                 },
               ),
-            ),
-
-            // Container(
-            //   padding: EdgeInsets.all(10.0),
-            //   decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.circular(10.0),
-            //     border: Border.all(color: Colors.grey),
-            //   ),
-            //   child: Column(
-            //     children: [
-            //       Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Text('Subtotal'),
-            //           Text('\$35.00'), // Replace with actual subtotal value
-            //         ],
-            //       ),
-            //       SizedBox(height: 10.0),
-            //       Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Text('Discount Amount'),
-            //           Text(
-            //               '-\$5.00'), // Replace with actual discount amount value
-            //         ],
-            //       ),
-            //       SizedBox(height: 10.0),
-            //       Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Text('Total Amount'),
-            //           Text('\$30.00'), // Replace with actual total amount value
-            //         ],
-            //       ),
-            //     ],
-            //   ),
-            // ),
-          ],
+              const SizedBox(height: 10.0),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddingToCartScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Add Items'),
+              ),
+              const SizedBox(height: 20.0),
+              const Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Subtotal:',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 10.0),
+                  Text(
+                    '\$${subtotal.toStringAsFixed(2)}',
+                    style: const TextStyle(fontSize: 16.0),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Discount:',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 10.0),
+                  SizedBox(
+                    width: 50,
+                    child: TextFormField(
+                      initialValue: discount.toString(),
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      onChanged: (value) {
+                        productProvider
+                            .setDiscount(double.tryParse(value) ?? 0.0);
+                      },
+                      decoration: const InputDecoration(),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Total:',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 10.0),
+                  Text(
+                    '\$${total.toStringAsFixed(2)}',
+                    style: const TextStyle(fontSize: 16.0),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Paid Amount:',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 10.0),
+                  SizedBox(
+                    width: 50.0,
+                    child: TextFormField(
+                      initialValue: paidAmount.toString(),
+                      keyboardType: const TextInputType.numberWithOptions(),
+                      onChanged: (value) {
+                        productProvider
+                            .setPaidAmount(double.tryParse(value) ?? 0.0);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Return Amount:',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 10.0),
+                  Text(
+                    '\$${returnAmount.toStringAsFixed(2)}',
+                    style: const TextStyle(fontSize: 16.0),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Due Amount:',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 10.0),
+                  Text(
+                    '\$${dueAmount.toStringAsFixed(2)}',
+                    style: const TextStyle(fontSize: 16.0),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10.0),
+            ],
+          ),
         ),
       ),
     );

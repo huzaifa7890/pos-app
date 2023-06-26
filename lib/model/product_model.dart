@@ -1,6 +1,7 @@
 class Product {
   final int id;
   final String name;
+  final String imageurl;
   final String description;
   final double price;
   int quantity;
@@ -14,6 +15,7 @@ class Product {
   Product({
     required this.id,
     required this.name,
+    required this.imageurl,
     required this.description,
     required this.price,
     this.quantity = 1,
