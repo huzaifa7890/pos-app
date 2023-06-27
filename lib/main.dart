@@ -58,8 +58,6 @@ class MyApp extends StatelessWidget {
             '/Products': (context) => const ProductScreen(),
             '/Purchase': (context) => const SalesScreen(),
             '/Sales': (context) => const SalesScreen(),
-            // Add more routes for other boxes
-
             ProductDetailScreen.routeName: (ctx) => const ProductDetailScreen(),
             AddNewProducts.routeName: (ctx) => const AddNewProducts(),
           },

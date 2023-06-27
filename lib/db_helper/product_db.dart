@@ -8,7 +8,7 @@ class DBHelper {
     return sql.openDatabase(path.join(dbPath, 'product.db'),
         onCreate: (db, version) {
       return db.execute(
-          'CREATE TABLE productdata(product_id INTEGER,product_sku INTEGER,tag_price DOUBLE,product_quantity INTEGER, sale_price DOUBLE,product_name TEXT,store_id INTEGER, store_name TEXT,weight INTEGER,description TEXT,costprice INTEGER,barcode INTEGER)');
+          'CREATE TABLE productdata(product_id INTEGER,product_image TEXT, product_sku INTEGER,tag_price DOUBLE,sale_price DOUBLE,product_name TEXT,store_id INTEGER, store_name TEXT,weight INTEGER,description TEXT,costprice INTEGER,barcode INTEGER)');
     }, version: 1);
   }
 

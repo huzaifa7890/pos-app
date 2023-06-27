@@ -21,10 +21,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    auth = LocalAuthentication();
+    // auth = LocalAuthentication();
 
-    deviceCapability();
-    _getAvailableBiometrics();
+    // deviceCapability();
+    // _getAvailableBiometrics();
   }
 
   final List<ItemsData> items = [
@@ -70,39 +70,39 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> _getAvailableBiometrics() async {
-    try {
-      availableBiometrics = await auth?.getAvailableBiometrics();
+  // Future<void> _getAvailableBiometrics() async {
+  //   try {
+  //     availableBiometrics = await auth?.getAvailableBiometrics();
 
-      if (availableBiometrics!.contains(BiometricType.strong) ||
-          availableBiometrics!.contains(BiometricType.fingerprint)) {
-        final bool didAuthenticate = await auth!.authenticate(
-          localizedReason:
-              'Unlock your screen with PIN, pattern, password, face, or fingerprint',
-          options: const AuthenticationOptions(
-            biometricOnly: true,
-            stickyAuth: true,
-          ),
-        );
-        if (!didAuthenticate) {}
-      } else if (availableBiometrics!.contains(BiometricType.weak) ||
-          availableBiometrics!.contains(BiometricType.face)) {
-        final bool didAuthenticate = await auth!.authenticate(
-          localizedReason:
-              'Unlock your screen with PIN, pattern, password, face, or fingerprint',
-          options: const AuthenticationOptions(stickyAuth: true),
-        );
-        if (!didAuthenticate) {}
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
+  //     if (availableBiometrics!.contains(BiometricType.strong) ||
+  //         availableBiometrics!.contains(BiometricType.fingerprint)) {
+  //       final bool didAuthenticate = await auth!.authenticate(
+  //         localizedReason:
+  //             'Unlock your screen with PIN, pattern, password, face, or fingerprint',
+  //         options: const AuthenticationOptions(
+  //           biometricOnly: true,
+  //           stickyAuth: true,
+  //         ),
+  //       );
+  //       if (!didAuthenticate) {}
+  //     } else if (availableBiometrics!.contains(BiometricType.weak) ||
+  //         availableBiometrics!.contains(BiometricType.face)) {
+  //       final bool didAuthenticate = await auth!.authenticate(
+  //         localizedReason:
+  //             'Unlock your screen with PIN, pattern, password, face, or fingerprint',
+  //         options: const AuthenticationOptions(stickyAuth: true),
+  //       );
+  //       if (!didAuthenticate) {}
+  //     }
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
 
-  void deviceCapability() async {
-    final bool isCapable = await auth!.canCheckBiometrics;
-    isDeviceSupport = isCapable || await auth!.isDeviceSupported();
-  }
+  // void deviceCapability() async {
+  //   final bool isCapable = await auth!.canCheckBiometrics;
+  //   isDeviceSupport = isCapable || await auth!.isDeviceSupported();
+  // }
 
   void navigateToBoxPage(BuildContext context, int index) {
     switch (index) {
@@ -115,7 +115,6 @@ class _HomeScreenState extends State<HomeScreen> {
       case 2:
         Navigator.pushNamed(context, '/Sales');
         break;
-      // Add more cases for other boxes
       default:
         break;
     }
