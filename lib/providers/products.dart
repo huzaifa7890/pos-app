@@ -27,6 +27,7 @@ class Products with ChangeNotifier {
   List<Product> get cartItems => _cartItems;
   double get discount => _discount;
   double get paidAmount => _paidAmount;
+
   void addToCart(Product product) {
     final existingProductIndex =
         _cartItems.indexWhere((item) => item.id == product.id);
@@ -91,6 +92,7 @@ class Products with ChangeNotifier {
 
     if (existingIndex >= 0) {
       _cartItems.removeAt(existingIndex);
+      product.quantity = 1;
     }
     notifyListeners();
   }
