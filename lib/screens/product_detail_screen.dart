@@ -19,7 +19,6 @@ class ProductDetailScreen extends StatelessWidget {
           children: [
             SizedBox(
               height: 300,
-              width: double.infinity,
               child: Image.network(
                 loeadeditems.imageurl,
                 fit: BoxFit.cover,

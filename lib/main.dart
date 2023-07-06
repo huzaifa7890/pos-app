@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pixelone/providers/auth.dart';
+import 'package:pixelone/providers/carts.dart';
+import 'package:pixelone/providers/orders.dart';
 import 'package:pixelone/providers/products.dart';
+import 'package:pixelone/screens/add_new_orders.dart';
 import 'package:pixelone/screens/add_new_products.dart';
 import 'package:pixelone/screens/home_screen.dart';
 import 'package:pixelone/screens/product_detail_screen.dart';
@@ -31,6 +34,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Products(),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => Carts(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Orders(),
+        ),
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
@@ -60,6 +69,7 @@ class MyApp extends StatelessWidget {
             '/Sales': (context) => const SalesScreen(),
             ProductDetailScreen.routeName: (ctx) => const ProductDetailScreen(),
             AddNewProducts.routeName: (ctx) => const AddNewProducts(),
+            AddNewOders.routeName: (context) => const AddNewOders(),
           },
         ),
       ),

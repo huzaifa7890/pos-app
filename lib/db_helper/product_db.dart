@@ -7,15 +7,17 @@ class DBHelper {
     final dbPath = await sql.getDatabasesPath();
     return sql.openDatabase(path.join(dbPath, 'product.db'),
         onCreate: (db, version) {
-      return db.execute(
-          'CREATE TABLE productdata(product_id INTEGER,product_image TEXT, product_sku INTEGER,tag_price DOUBLE,sale_price DOUBLE,product_name TEXT,store_id INTEGER, store_name TEXT,weight INTEGER,description TEXT,costprice INTEGER,barcode INTEGER)');
+      db.execute(
+          'CREATE TABLE products(product_id INTEGER PRIMARY KEY,product_image TEXT, product_sku INTEGER,tag_price DOUBLE,sale_price DOUBLE,product_name TEXT,store_id INTEGER, store_name TEXT,weight INTEGER,description TEXT,costprice INTEGER,barcode INTEGER)');
+      db.execute(
+          'CREATE TABLE orders(order_id INTEGER PRIMARY KEY,subtotal DOUBLE ,discount DOUBLE,returnAmount DOUBLE,dueAmount DOUBLE,total DOUBLE,paidAmount DOUBLE, status INTEGER)');
     }, version: 1);
   }
 
-  static Future<void> insert(Map<String, Object> data) async {
+  static Future<void> insert(String table, Map<String, Object> data) async {
     final db = await DBHelper.database();
     db.insert(
-      'productdata',
+      table,
       data,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -28,6 +30,6 @@ class DBHelper {
 
   static Future<void> deleteTable() async {
     final db = await DBHelper.database();
-    await db.execute('DROP TABLE IF EXISTS productdata');
+    await db.execute('DROP TABLE IF EXISTS products');
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pixelone/model/product_model.dart';
+import 'package:pixelone/providers/carts.dart';
+import 'package:pixelone/providers/orders.dart';
 import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_orders.dart';
 import 'package:pixelone/screens/addingtocart_screen.dart';
@@ -17,6 +19,8 @@ class SalesScreen extends StatefulWidget {
 class _SalesScreenState extends State<SalesScreen> {
   late Products productProvider;
 
+  late bool status;
+
   @override
   void initState() {
     super.initState();
@@ -29,16 +33,15 @@ class _SalesScreenState extends State<SalesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Products productProvider = Provider.of<Products>(context);
-    List<Product> cartItems = productProvider.cartItems;
+    List<Product> cartItems = Provider.of<Carts>(context).cartItems;
+    Carts cartProvider = Provider.of<Carts>(context, listen: false);
 
-    double subtotal = productProvider.calculateSubtotal();
-    double discount = productProvider.discount;
+    double subtotal = cartProvider.calculateSubtotal();
+    double discount = cartProvider.discount;
     double total = subtotal - discount;
-    double paidAmount = productProvider.paidAmount;
-    double returnAmount = productProvider.returnAmount(total);
-    double dueAmount = productProvider.dueAmount(total);
-
+    double paidAmount = cartProvider.paidAmount;
+    double returnAmount = cartProvider.returnAmount(total);
+    double dueAmount = cartProvider.dueAmount(total);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sales'),
@@ -74,7 +77,8 @@ class _SalesScreenState extends State<SalesScreen> {
       double paidAmount,
       double returnAmount,
       double dueAmount) {
-    Products productProvider = Provider.of<Products>(context);
+    Carts cartProvider = Provider.of(context, listen: false);
+
     return SingleChildScrollView(
       child: Container(
         margin: const EdgeInsets.all(10.0),
@@ -104,7 +108,8 @@ class _SalesScreenState extends State<SalesScreen> {
               children: [
                 Expanded(
                   child: TextFormField(
-                    onChanged: (value) => productProvider.setSearchText(value),
+                    onChanged: (value) =>
+                        Provider.of<Products>(context).setSearchText(value),
                     decoration: const InputDecoration(
                       labelText: 'Search Product',
                     ),
@@ -113,7 +118,7 @@ class _SalesScreenState extends State<SalesScreen> {
                 const SizedBox(width: 10.0),
                 ElevatedButton(
                   onPressed: () {
-                    productProvider.clearCart();
+                    cartProvider.clearCart();
                   },
                   child: const Text('Clear'),
                 ),
@@ -174,20 +179,20 @@ class _SalesScreenState extends State<SalesScreen> {
                     children: [
                       IconButton(
                         onPressed: () {
-                          productProvider.decreaseQuantity(product);
+                          cartProvider.decreaseQuantity(product);
                         },
                         icon: const Icon(Icons.remove),
                       ),
                       Text(product.quantity.toString()),
                       IconButton(
                         onPressed: () {
-                          productProvider.addToCart(product);
+                          cartProvider.addToCart(product);
                         },
                         icon: const Icon(Icons.add),
                       ),
                       IconButton(
                         onPressed: () {
-                          productProvider.removeFromCart(product);
+                          cartProvider.removeFromCart(product);
                         },
                         icon: const Icon(Icons.delete),
                       ),
@@ -246,8 +251,7 @@ class _SalesScreenState extends State<SalesScreen> {
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     onChanged: (value) {
-                      productProvider
-                          .setDiscount(double.tryParse(value) ?? 0.0);
+                      cartProvider.setDiscount(double.tryParse(value) ?? 0.0);
                     },
                     decoration: const InputDecoration(),
                   ),
@@ -290,8 +294,7 @@ class _SalesScreenState extends State<SalesScreen> {
                     initialValue: paidAmount.toStringAsFixed(0),
                     keyboardType: const TextInputType.numberWithOptions(),
                     onChanged: (value) {
-                      productProvider
-                          .setPaidAmount(double.tryParse(value) ?? 0.0);
+                      cartProvider.setPaidAmount(double.tryParse(value) ?? 0.0);
                     },
                   ),
                 ),
@@ -362,8 +365,10 @@ class _SalesScreenState extends State<SalesScreen> {
       double paidAmount,
       double returnAmount,
       double dueAmount) {
-    Products productProvider = Provider.of<Products>(context);
-    final filteredList = productProvider.getFilteredProducts();
+    Carts cartProvider = Provider.of(context, listen: false);
+
+    final filteredList =
+        Provider.of<Products>(context, listen: false).getFilteredProducts();
     return Row(
       children: [
         Expanded(
@@ -454,7 +459,7 @@ class _SalesScreenState extends State<SalesScreen> {
                                           IconButton(
                                             icon: const Icon(Icons.remove),
                                             onPressed: () {
-                                              productProvider
+                                              cartProvider
                                                   .decreaseQuantity(product);
                                             },
                                           ),
@@ -462,8 +467,7 @@ class _SalesScreenState extends State<SalesScreen> {
                                           IconButton(
                                             icon: const Icon(Icons.add),
                                             onPressed: () {
-                                              productProvider
-                                                  .addToCart(product);
+                                              cartProvider.addToCart(product);
                                             },
                                           ),
                                         ],
@@ -474,8 +478,7 @@ class _SalesScreenState extends State<SalesScreen> {
                                       DataCell(IconButton(
                                         icon: const Icon(Icons.delete),
                                         onPressed: () {
-                                          productProvider
-                                              .removeFromCart(product);
+                                          cartProvider.removeFromCart(product);
                                         },
                                       )),
                                     ],
@@ -514,8 +517,9 @@ class _SalesScreenState extends State<SalesScreen> {
                           initialValue: discount.toStringAsFixed(0),
                           keyboardType: const TextInputType.numberWithOptions(
                               decimal: true),
+                          enabled: cartItems.isNotEmpty,
                           onChanged: (value) {
-                            productProvider
+                            cartProvider
                                 .setDiscount(double.tryParse(value) ?? 0.0);
                           },
                           decoration: const InputDecoration(),
@@ -580,11 +584,11 @@ class _SalesScreenState extends State<SalesScreen> {
                       SizedBox(
                         width: 50.0,
                         child: TextFormField(
-                          initialValue: paidAmount.toStringAsFixed(0),
-                          keyboardType: const TextInputType.numberWithOptions(),
+                          keyboardType: TextInputType.number,
+                          enabled: cartItems.isNotEmpty,
                           onChanged: (value) {
-                            productProvider
-                                .setPaidAmount(double.tryParse(value) ?? 0.0);
+                            cartProvider
+                                .setPaidAmount(double.tryParse(value) ?? 0);
                           },
                         ),
                       ),
@@ -592,14 +596,41 @@ class _SalesScreenState extends State<SalesScreen> {
                   ),
                   const SizedBox(height: 10.0),
                   Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: cartItems.isEmpty
+                            ? null
+                            : () {
+                                Provider.of<Orders>(context, listen: false)
+                                    .storeOrders(
+                                        subtotal,
+                                        discount,
+                                        returnAmount,
+                                        dueAmount,
+                                        total,
+                                        paidAmount,
+                                        status = false);
+                                Provider.of<Carts>(context, listen: false)
+                                    .clearCart();
+                                Provider.of<Carts>(context, listen: false)
+                                    .setPaidAmount(0);
+                              },
                         child: const Text('Suspend'),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: cartItems.isEmpty
+                            ? null
+                            : () {
+                                Provider.of<Orders>(context, listen: false)
+                                    .storeOrders(
+                                        subtotal,
+                                        discount,
+                                        returnAmount,
+                                        dueAmount,
+                                        total,
+                                        paidAmount,
+                                        status = true);
+                              },
                         child: const Text('Order'),
                       ),
                     ],
@@ -626,8 +657,8 @@ class _SalesScreenState extends State<SalesScreen> {
                     children: [
                       Expanded(
                         child: TextFormField(
-                          onChanged: (value) =>
-                              productProvider.setSearchText(value),
+                          onChanged: (value) => Provider.of<Products>(context)
+                              .setSearchText(value),
                           decoration: const InputDecoration(
                             labelText: 'Search Product',
                           ),
@@ -636,7 +667,8 @@ class _SalesScreenState extends State<SalesScreen> {
                     ],
                   ),
                   const SizedBox(height: 10.0),
-                  Text('All Products (${productProvider.items.length})'),
+                  Text(
+                      'All Products (${Provider.of<Products>(context).items.length})'),
                   const SizedBox(height: 10.0),
                   ListView.builder(
                     shrinkWrap: true,
@@ -644,10 +676,9 @@ class _SalesScreenState extends State<SalesScreen> {
                     itemCount: filteredList.length,
                     itemBuilder: (ctx, index) {
                       final product = filteredList[index];
-
                       return GestureDetector(
                         onTap: () {
-                          productProvider.addToCart(product);
+                          cartProvider.addToCart(product);
                         },
                         child: ListTile(
                           leading: CircleAvatar(

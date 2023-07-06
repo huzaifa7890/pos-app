@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:pixelone/model/http_exception.dart';
+import 'package:pixelone/providers/carts.dart';
 import 'package:pixelone/providers/products.dart';
 import 'package:provider/provider.dart';
 import 'package:pixelone/utils/constants.dart' as constant;
@@ -39,7 +40,7 @@ class _AddingToCartScreenState extends State<AddingToCartScreen> {
       setState(() {
         barcodeResult = barcode;
       });
-      productProvider.addToCartByBarcode(barcode);
+      Provider.of<Carts>(context, listen: false).addToCartByBarcode(barcode);
       Navigator.of(context).pop();
     } catch (e) {
       setState(() {
@@ -54,7 +55,7 @@ class _AddingToCartScreenState extends State<AddingToCartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    productProvider = Provider.of<Products>(context);
+    productProvider = Provider.of<Products>(context, listen: false);
     final filteredList = productProvider.getFilteredProducts();
 
     return Scaffold(
@@ -157,7 +158,8 @@ class _AddingToCartScreenState extends State<AddingToCartScreen> {
                       final product = filteredList[index];
                       return GestureDetector(
                         onTap: () {
-                          productProvider.addToCart(product);
+                          Provider.of<Carts>(context, listen: false)
+                              .addToCart(product);
                           Navigator.of(context).pop();
                         },
                         child: ListTile(
