@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pixelone/providers/orders.dart';
+import 'package:provider/provider.dart';
 
 class AddNewOders extends StatelessWidget {
   static const routeName = '/new-order';
@@ -10,11 +12,15 @@ class AddNewOders extends StatelessWidget {
       appBar: AppBar(
         title: const Text('New Order'),
       ),
-      body: const Column(
+      body: Column(
         children: [
-          Card(
-            child: Text("data"),
-          )
+          ElevatedButton(onPressed: () {}, child: const Text('data')),
+          ElevatedButton(
+              onPressed: () {
+                Provider.of<Orders>(context, listen: false)
+                    .fetchingProductFromDB();
+              },
+              child: const Text('fetch')),
         ],
       ),
     );
