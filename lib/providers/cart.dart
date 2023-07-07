@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:pixelone/model/product_model.dart';
 
-class Carts with ChangeNotifier {
+class Cart with ChangeNotifier {
   final List<Product> _cartItems = [];
 
   List<Product> get cartItems => [..._cartItems];

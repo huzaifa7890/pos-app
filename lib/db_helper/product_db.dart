@@ -1,3 +1,4 @@
+import 'package:pixelone/db_helper/db_tables.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqlite_api.dart';
@@ -6,11 +7,10 @@ class DBHelper {
   static Future<Database> database() async {
     final dbPath = await sql.getDatabasesPath();
     return sql.openDatabase(path.join(dbPath, 'product.db'),
-        onCreate: (db, version) {
-      db.execute(
-          'CREATE TABLE products(product_id INTEGER PRIMARY KEY,product_image TEXT, product_sku INTEGER,tag_price DOUBLE,sale_price DOUBLE,product_name TEXT,store_id INTEGER, store_name TEXT,weight INTEGER,description TEXT,costprice INTEGER,barcode INTEGER)');
-      db.execute(
-          'CREATE TABLE orders(order_id INTEGER PRIMARY KEY,subtotal DOUBLE ,discount DOUBLE,returnAmount DOUBLE,dueAmount DOUBLE,total DOUBLE,paidAmount DOUBLE, status INTEGER)');
+        onCreate: (db, version) async {
+      await ProductTable.createTable(db);
+      await OrdersTable.createTable(db);
+      await OrderItemsTable.createTable(db);
     }, version: 1);
   }
 

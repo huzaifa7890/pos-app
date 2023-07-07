@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pixelone/providers/auth.dart';
-import 'package:pixelone/providers/carts.dart';
+import 'package:pixelone/providers/cart.dart';
 import 'package:pixelone/providers/orders.dart';
 import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_orders.dart';
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
           create: (ctx) => Products(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => Carts(),
+          create: (ctx) => Cart(),
         ),
         ChangeNotifierProvider(
           create: (ctx) => Orders(),

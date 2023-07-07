@@ -38,7 +38,7 @@ class Orders with ChangeNotifier {
     double paidAmount,
     status,
   ) async {
-    DBHelper.insert('orders', {
+    await DBHelper.insert('orders', {
       'order_id': 1,
       'subtotal': subtotal,
       'discount': discount,
@@ -51,7 +51,25 @@ class Orders with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchingProductFromDB() async {
+  Future<void> storeOderItems(
+    int productId,
+    String productName,
+    double productPrice,
+    int productQuantity,
+    double discount,
+  ) async {
+    await DBHelper.insert('orderitems', {
+      'orderitem_id': 1,
+      'product_id': productId,
+      'product_name': productName,
+      'product_price': productPrice,
+      'product_quantity': productQuantity,
+      'discount': discount,
+    });
+    notifyListeners();
+  }
+
+  Future<void> fetchingOrdersFromDB() async {
     final dataList = await DBHelper.getData('orders');
     _items = dataList
         .map(

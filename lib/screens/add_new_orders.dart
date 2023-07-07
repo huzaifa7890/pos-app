@@ -18,7 +18,7 @@ class AddNewOders extends StatelessWidget {
           ElevatedButton(
               onPressed: () {
                 Provider.of<Orders>(context, listen: false)
-                    .fetchingProductFromDB();
+                    .fetchingOrdersFromDB();
               },
               child: const Text('fetch')),
         ],

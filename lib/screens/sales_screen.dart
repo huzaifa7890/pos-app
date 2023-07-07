@@ -1,6 +1,8 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 import 'package:pixelone/model/product_model.dart';
-import 'package:pixelone/providers/carts.dart';
+import 'package:pixelone/providers/cart.dart';
 import 'package:pixelone/providers/orders.dart';
 import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_orders.dart';
@@ -33,8 +35,8 @@ class _SalesScreenState extends State<SalesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Product> cartItems = Provider.of<Carts>(context).cartItems;
-    Carts cartProvider = Provider.of<Carts>(context, listen: false);
+    List<Product> cartItems = Provider.of<Cart>(context).cartItems;
+    Cart cartProvider = Provider.of<Cart>(context, listen: false);
 
     double subtotal = cartProvider.calculateSubtotal();
     double discount = cartProvider.discount;
@@ -77,7 +79,7 @@ class _SalesScreenState extends State<SalesScreen> {
       double paidAmount,
       double returnAmount,
       double dueAmount) {
-    Carts cartProvider = Provider.of(context, listen: false);
+    Cart cartProvider = Provider.of(context, listen: false);
 
     return SingleChildScrollView(
       child: Container(
@@ -365,8 +367,15 @@ class _SalesScreenState extends State<SalesScreen> {
       double paidAmount,
       double returnAmount,
       double dueAmount) {
-    Carts cartProvider = Provider.of(context, listen: false);
+    Cart cartProvider = Provider.of<Cart>(context, listen: false);
+    Orders orderProvider = Provider.of<Orders>(context, listen: false);
 
+// i store in these variable the cart items data.. but these variable store only 1 cart item....
+
+    var productId;
+    var productName;
+    var productPrice;
+    var productQuantity;
     final filteredList =
         Provider.of<Products>(context, listen: false).getFilteredProducts();
     return Row(
@@ -601,19 +610,28 @@ class _SalesScreenState extends State<SalesScreen> {
                         onPressed: cartItems.isEmpty
                             ? null
                             : () {
-                                Provider.of<Orders>(context, listen: false)
-                                    .storeOrders(
-                                        subtotal,
-                                        discount,
-                                        returnAmount,
-                                        dueAmount,
-                                        total,
-                                        paidAmount,
-                                        status = false);
-                                Provider.of<Carts>(context, listen: false)
-                                    .clearCart();
-                                Provider.of<Carts>(context, listen: false)
-                                    .setPaidAmount(0);
+                                for (Product product in cartItems) {
+                                  productId = product.id;
+                                  productName = product.name;
+                                  productPrice = product.price;
+                                  productQuantity = product.quantity;
+                                }
+                                orderProvider.storeOrders(
+                                  subtotal,
+                                  discount,
+                                  returnAmount,
+                                  dueAmount,
+                                  total,
+                                  paidAmount,
+                                  status = false,
+                                );
+                                orderProvider.storeOderItems(
+                                    productId,
+                                    productName,
+                                    productPrice,
+                                    productQuantity,
+                                    discount);
+                                cartProvider.setPaidAmount(0);
                               },
                         child: const Text('Suspend'),
                       ),
@@ -621,15 +639,29 @@ class _SalesScreenState extends State<SalesScreen> {
                         onPressed: cartItems.isEmpty
                             ? null
                             : () {
-                                Provider.of<Orders>(context, listen: false)
-                                    .storeOrders(
-                                        subtotal,
-                                        discount,
-                                        returnAmount,
-                                        dueAmount,
-                                        total,
-                                        paidAmount,
-                                        status = true);
+                                for (Product product in cartItems) {
+                                  productId = product.id;
+                                  productName = product.name;
+                                  productPrice = product.price;
+                                  productQuantity = product.quantity;
+                                }
+                                orderProvider.storeOrders(
+                                  subtotal,
+                                  discount,
+                                  returnAmount,
+                                  dueAmount,
+                                  total,
+                                  paidAmount,
+                                  status = true,
+                                );
+                                orderProvider.storeOderItems(
+                                    productId,
+                                    productName,
+                                    productPrice,
+                                    productQuantity,
+                                    discount);
+                                cartProvider.setPaidAmount(0);
+                                cartProvider.clearCart();
                               },
                         child: const Text('Order'),
                       ),
