@@ -11,13 +11,13 @@ class ProductTable {
 class OrdersTable {
   static Future<void> createTable(Database db) async {
     await db.execute(
-        'CREATE TABLE orders(order_id INTEGER PRIMARY KEY,subtotal DOUBLE ,discount DOUBLE,returnAmount DOUBLE,dueAmount DOUBLE,total DOUBLE,paidAmount DOUBLE, status TEXT)');
+        'CREATE TABLE orders(id INTEGER PRIMARY KEY AUTOINCREMENT,subtotal DOUBLE ,discount DOUBLE,returnAmount DOUBLE,dueAmount DOUBLE,total DOUBLE,paidAmount DOUBLE, status TEXT)');
   }
 }
 
 class OrderItemsTable {
   static Future<void> createTable(Database db) async {
     await db.execute(
-        'CREATE TABLE orderitems(orderitem_id INTEGER PRIMARY KEY, product_id INTEGER,product_name TEXT,product_price DOUBLE,product_quantity INTEGER,discount DOUBLE)');
+        'CREATE TABLE orderitems(orderitem_id INTEGER PRIMARY KEY AUTOINCREMENT,order_id INTEGER,product_id INTEGER,product_name TEXT,product_price DOUBLE,product_quantity INTEGER,discount DOUBLE,FOREIGN KEY (order_id) REFERENCES orders (id))');
   }
 }
