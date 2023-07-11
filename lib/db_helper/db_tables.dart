@@ -18,6 +18,6 @@ class OrdersTable {
 class OrderItemsTable {
   static Future<void> createTable(Database db) async {
     await db.execute(
-        'CREATE TABLE orderitems(id INTEGER PRIMARY KEY AUTOINCREMENT,order_id INTEGER,product_id INTEGER,product_name TEXT,product_price DOUBLE,product_quantity INTEGER,discount DOUBLE,FOREIGN KEY (order_id) REFERENCES orders (id)),FOREIGN KEY (product_id) REFERENCE products(id)');
+        'CREATE TABLE orderitems(id INTEGER PRIMARY KEY AUTOINCREMENT,order_id INTEGER,product_id INTEGER,product_name TEXT,product_price DOUBLE,product_quantity INTEGER,discount DOUBLE,FOREIGN KEY (order_id) REFERENCES orders (id),FOREIGN KEY (product_id) REFERENCES products(id))');
   }
 }

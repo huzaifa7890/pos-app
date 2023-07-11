@@ -62,7 +62,7 @@ class Orders with ChangeNotifier {
     double discount,
   ) async {
     await DBHelper.insert('orderitems', {
-      'order_id': orderId,
+      'id': orderId,
       'product_id': productId,
       'product_name': productName,
       'product_price': productPrice,

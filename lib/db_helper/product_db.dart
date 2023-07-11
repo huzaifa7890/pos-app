@@ -10,6 +10,7 @@ class DBHelper {
         onCreate: (db, version) async {
       await ProductTable.createTable(db);
       await OrdersTable.createTable(db);
+      await OrderItemsTable.createTable(db);
     }, version: 1, onConfigure: _onConfigure);
   }
 
