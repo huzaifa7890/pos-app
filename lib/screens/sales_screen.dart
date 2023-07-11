@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:pixelone/model/product_model.dart';
@@ -7,12 +7,18 @@ import 'package:pixelone/providers/orders.dart';
 import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_orders.dart';
 import 'package:pixelone/screens/addingtocart_screen.dart';
+import 'package:pixelone/screens/order_screen.dart';
 import 'package:provider/provider.dart';
+
+enum OrderStatus {
+  completed,
+  suspended,
+}
 
 class SalesScreen extends StatefulWidget {
   const SalesScreen({super.key});
 
-  static const routeName = '/orders';
+  static const routeName = '/Sales';
 
   @override
   State<SalesScreen> createState() => _SalesScreenState();
@@ -46,8 +52,26 @@ class _SalesScreenState extends State<SalesScreen> {
     double dueAmount = cartProvider.dueAmount(total);
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: const Text('Sales'),
         actions: [
+          ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black,
+                backgroundColor: Colors.white,
+              ),
+              child: const Text('Suspeded')),
+          const SizedBox(
+            width: 5,
+          ),
+          ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black,
+                backgroundColor: Colors.white,
+              ),
+              child: const Text('Print')),
           IconButton(
             onPressed: () {
               Navigator.of(context).pushNamed(AddNewOders.routeName);
@@ -370,12 +394,10 @@ class _SalesScreenState extends State<SalesScreen> {
     Cart cartProvider = Provider.of<Cart>(context, listen: false);
     Orders orderProvider = Provider.of<Orders>(context, listen: false);
 
-// i store in these variable the cart items data.. but these variable store only 1 cart item....
-
-    var productId;
-    var productName;
-    var productPrice;
-    var productQuantity;
+    int productId;
+    String productName;
+    double productPrice;
+    int productQuantity;
     final filteredList =
         Provider.of<Products>(context, listen: false).getFilteredProducts();
     return Row(
@@ -609,61 +631,86 @@ class _SalesScreenState extends State<SalesScreen> {
                       ElevatedButton(
                         onPressed: cartItems.isEmpty
                             ? null
-                            : () {
+                            : () async {
                                 for (Product product in cartItems) {
                                   productId = product.id;
                                   productName = product.name;
                                   productPrice = product.price;
                                   productQuantity = product.quantity;
+
+                                  final orderId =
+                                      await orderProvider.storeOrders(
+                                          subtotal,
+                                          discount,
+                                          returnAmount,
+                                          dueAmount,
+                                          total,
+                                          paidAmount,
+                                          status = false);
+
+                                  if (orderId != 0) {
+                                    orderProvider.storeOderItems(
+                                      orderId,
+                                      productId,
+                                      productName,
+                                      productPrice,
+                                      productQuantity,
+                                      discount,
+                                    );
+                                  }
                                 }
-                                orderProvider.storeOrders(
-                                  subtotal,
-                                  discount,
-                                  returnAmount,
-                                  dueAmount,
-                                  total,
-                                  paidAmount,
-                                  status = false,
-                                );
-                                orderProvider.storeOderItems(
-                                    productId,
-                                    productName,
-                                    productPrice,
-                                    productQuantity,
-                                    discount);
                                 cartProvider.setPaidAmount(0);
+                                cartProvider.clearCart();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const OrderScreen()),
+                                );
                               },
                         child: const Text('Suspend'),
                       ),
                       ElevatedButton(
                         onPressed: cartItems.isEmpty
                             ? null
-                            : () {
+                            : () async {
                                 for (Product product in cartItems) {
                                   productId = product.id;
                                   productName = product.name;
                                   productPrice = product.price;
                                   productQuantity = product.quantity;
+
+                                  final orderId =
+                                      await orderProvider.storeOrders(
+                                          subtotal,
+                                          discount,
+                                          returnAmount,
+                                          dueAmount,
+                                          total,
+                                          paidAmount,
+                                          status = true);
+
+                                  if (orderId != 0) {
+                                    orderProvider.storeOderItems(
+                                      orderId,
+                                      productId,
+                                      productName,
+                                      productPrice,
+                                      productQuantity,
+                                      discount,
+                                    );
+                                  }
                                 }
-                                orderProvider.storeOrders(
-                                  subtotal,
-                                  discount,
-                                  returnAmount,
-                                  dueAmount,
-                                  total,
-                                  paidAmount,
-                                  status = true,
-                                );
-                                orderProvider.storeOderItems(
-                                    productId,
-                                    productName,
-                                    productPrice,
-                                    productQuantity,
-                                    discount);
                                 cartProvider.setPaidAmount(0);
                                 cartProvider.clearCart();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const OrderScreen()),
+                                );
                               },
-                        child: const Text('Order'),
+                        child: const Text('Pay'),
                       ),
                     ],
                   ),

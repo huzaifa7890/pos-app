@@ -19,17 +19,17 @@ class Order {
     required this.dueAmount,
     required this.total,
     required this.paidAmount,
-    this.status = true,
+    this.status = false,
   });
 }
 
 class Orders with ChangeNotifier {
-  List<Order> _items = [];
-  List<Order> get items {
-    return [..._items];
+  List<Order> _orders = [];
+  List<Order> get orders {
+    return [..._orders];
   }
 
-  Future<void> storeOrders(
+  Future<int> storeOrders(
     double subtotal,
     double discount,
     double returnAmount,
@@ -38,8 +38,8 @@ class Orders with ChangeNotifier {
     double paidAmount,
     status,
   ) async {
-    await DBHelper.insert('orders', {
-      'order_id': 1,
+    final db = await DBHelper.database();
+    final orderId = await db.insert('orders', {
       'subtotal': subtotal,
       'discount': discount,
       'returnAmount': returnAmount,
@@ -48,10 +48,13 @@ class Orders with ChangeNotifier {
       'paidAmount': paidAmount,
       'status': status,
     });
+
     notifyListeners();
+    return orderId;
   }
 
   Future<void> storeOderItems(
+    orderId,
     int productId,
     String productName,
     double productPrice,
@@ -59,7 +62,7 @@ class Orders with ChangeNotifier {
     double discount,
   ) async {
     await DBHelper.insert('orderitems', {
-      'orderitem_id': 1,
+      'id': orderId,
       'product_id': productId,
       'product_name': productName,
       'product_price': productPrice,
@@ -71,16 +74,18 @@ class Orders with ChangeNotifier {
 
   Future<void> fetchingOrdersFromDB() async {
     final dataList = await DBHelper.getData('orders');
-    _items = dataList
+    _orders = dataList
         .map(
           (e) => Order(
-              id: e['order_id'],
-              subtotal: e['subtotal'],
-              discount: e['discount'],
-              returnAmount: e['returnAmount'],
-              dueAmount: e['dueAmount'],
-              total: e['total'],
-              paidAmount: e['paidAmount']),
+            id: e['id'],
+            subtotal: e['subtotal'],
+            discount: e['discount'],
+            returnAmount: e['returnAmount'],
+            dueAmount: e['dueAmount'],
+            total: e['total'],
+            paidAmount: e['paidAmount'],
+            // status: e['status'],
+          ),
         )
         .toList();
     notifyListeners();

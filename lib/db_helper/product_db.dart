@@ -11,7 +11,7 @@ class DBHelper {
       await ProductTable.createTable(db);
       await OrdersTable.createTable(db);
       await OrderItemsTable.createTable(db);
-    }, version: 1);
+    }, version: 1, onConfigure: _onConfigure);
   }
 
   static Future<void> insert(String table, Map<String, Object> data) async {
@@ -31,5 +31,9 @@ class DBHelper {
   static Future<void> deleteTable() async {
     final db = await DBHelper.database();
     await db.execute('DROP TABLE IF EXISTS products');
+  }
+
+  static Future _onConfigure(Database db) async {
+    await db.execute('PRAGMA foreign_keys = ON');
   }
 }

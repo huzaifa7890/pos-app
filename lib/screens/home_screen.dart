@@ -17,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isDeviceSupport = false;
   List<BiometricType>? availableBiometrics;
   LocalAuthentication? auth;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -25,6 +26,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // deviceCapability();
     // _getAvailableBiometrics();
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    switch (index) {
+      case 0:
+        Navigator.pushReplacementNamed(context, '/');
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/Setting');
+        break;
+      default:
+        break;
+    }
   }
 
   final List<ItemsData> items = [
@@ -66,6 +83,20 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
       ),
     );
   }
@@ -114,6 +145,9 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
       case 2:
         Navigator.pushNamed(context, '/Sales');
+        break;
+      case 3:
+        Navigator.pushNamed(context, '/Orders');
         break;
       default:
         break;

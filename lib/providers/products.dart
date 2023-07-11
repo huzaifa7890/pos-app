@@ -117,7 +117,7 @@ class Products with ChangeNotifier {
           List<dynamic> objects = data['data'];
           for (var i = 0; i < objects.length; i++) {
             DBHelper.insert('products', {
-              'product_id': objects[i]['product_id'],
+              'id': objects[i]['product_id'],
               'product_image': objects[i]['product_image_path'],
               'product_sku': objects[i]['product_sku'],
               'tag_price': objects[i]['tag_price'],
@@ -146,7 +146,7 @@ class Products with ChangeNotifier {
       _items = dataList
           .map(
             (e) => Product(
-                id: e['product_id'],
+                id: e['id'],
                 name: e['product_name'],
                 imageurl: e['product_image'],
                 price: e['tag_price'],

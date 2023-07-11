@@ -6,9 +6,11 @@ import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_orders.dart';
 import 'package:pixelone/screens/add_new_products.dart';
 import 'package:pixelone/screens/home_screen.dart';
+import 'package:pixelone/screens/order_screen.dart';
 import 'package:pixelone/screens/product_detail_screen.dart';
 import 'package:pixelone/screens/sales_screen.dart';
 import 'package:pixelone/screens/products_screen.dart';
+import 'package:pixelone/screens/settings_screen.dart';
 import 'package:pixelone/screens/splash_screen.dart';
 import 'package:pixelone/utils/constants.dart';
 import 'package:provider/provider.dart';
@@ -67,6 +69,8 @@ class MyApp extends StatelessWidget {
             '/Products': (context) => const ProductScreen(),
             '/Purchase': (context) => const SalesScreen(),
             '/Sales': (context) => const SalesScreen(),
+            '/Orders': (context) => const OrderScreen(),
+            '/Setting': (context) => const SettingScreen(),
             ProductDetailScreen.routeName: (ctx) => const ProductDetailScreen(),
             AddNewProducts.routeName: (ctx) => const AddNewProducts(),
             AddNewOders.routeName: (context) => const AddNewOders(),

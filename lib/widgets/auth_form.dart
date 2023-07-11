@@ -46,6 +46,11 @@ class _AuthFormState extends State<AuthForm> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Center(
         child: Card(
@@ -106,7 +111,7 @@ class _AuthFormState extends State<AuthForm> {
                 ),
                 TextFormField(
                   key: const ValueKey('password'),
-                  textInputAction: TextInputAction.next,
+                  textInputAction: TextInputAction.done,
                   validator: (value) {
                     if (value!.isEmpty || value.length < 6) {
                       return constants.SH_PASSWORD_ERROR;
