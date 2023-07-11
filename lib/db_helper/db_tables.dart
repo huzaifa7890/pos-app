@@ -4,7 +4,7 @@ import 'package:sqflite/sqlite_api.dart';
 class ProductTable {
   static Future<void> createTable(Database db) async {
     await db.execute(
-        'CREATE TABLE products(product_id INTEGER PRIMARY KEY,product_image TEXT, product_sku INTEGER,tag_price DOUBLE,sale_price DOUBLE,product_name TEXT,store_id INTEGER, store_name TEXT,weight INTEGER,description TEXT,costprice INTEGER,barcode INTEGER)');
+        'CREATE TABLE products(id INTEGER PRIMARY KEY,product_image TEXT, product_sku INTEGER,tag_price DOUBLE,sale_price DOUBLE,product_name TEXT,store_id INTEGER, store_name TEXT,weight INTEGER,description TEXT,costprice INTEGER,barcode INTEGER)');
   }
 }
 
@@ -18,6 +18,6 @@ class OrdersTable {
 class OrderItemsTable {
   static Future<void> createTable(Database db) async {
     await db.execute(
-        'CREATE TABLE orderitems(orderitem_id INTEGER PRIMARY KEY AUTOINCREMENT,order_id INTEGER,product_id INTEGER,product_name TEXT,product_price DOUBLE,product_quantity INTEGER,discount DOUBLE,FOREIGN KEY (order_id) REFERENCES orders (id))');
+        'CREATE TABLE orderitems(id INTEGER PRIMARY KEY AUTOINCREMENT,order_id INTEGER,product_id INTEGER,product_name TEXT,product_price DOUBLE,product_quantity INTEGER,discount DOUBLE,FOREIGN KEY (order_id) REFERENCES orders (id)),FOREIGN KEY (product_id) REFERENCE products(id)');
   }
 }
