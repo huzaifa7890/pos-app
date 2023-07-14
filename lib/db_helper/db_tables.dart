@@ -11,7 +11,7 @@ class ProductTable {
 class OrdersTable {
   static Future<void> createTable(Database db) async {
     await db.execute(
-        'CREATE TABLE orders(id INTEGER PRIMARY KEY AUTOINCREMENT,subtotal DOUBLE ,discount DOUBLE,returnAmount DOUBLE,dueAmount DOUBLE,total DOUBLE,paidAmount DOUBLE, status TEXT)');
+        'CREATE TABLE orders(id INTEGER PRIMARY KEY AUTOINCREMENT,product_id INTEGER,subtotal DOUBLE ,discount DOUBLE,returnAmount DOUBLE,dueAmount DOUBLE,total DOUBLE,paidAmount DOUBLE, status INTEGER,FOREIGN KEY (product_id) REFERENCES products(id))');
   }
 }
 

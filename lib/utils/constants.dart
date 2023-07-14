@@ -96,6 +96,7 @@ const listViewSeparator = Divider(
 // ignore_for_file: constant_identifier_names
 
 const String BASE_API_URL = "https://devapi.pixelone.app/ems/api/v2";
+// const String BASE_API_URL = "http://10.0.2.2/ems/api/v2";
 
 // Signup page
 
