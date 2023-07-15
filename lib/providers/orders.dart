@@ -58,7 +58,7 @@ class Orders with ChangeNotifier {
   }
 
   Future<int> storeOrders(
-    int productid,
+    // int productid,
     double subtotal,
     double discount,
     double returnAmount,
@@ -69,7 +69,7 @@ class Orders with ChangeNotifier {
   ) async {
     final db = await DBHelper.database();
     final orderId = await db.insert('orders', {
-      'product_id': productid,
+      'product_id': 123,
       'subtotal': subtotal,
       'discount': discount,
       'returnAmount': returnAmount,
@@ -92,7 +92,7 @@ class Orders with ChangeNotifier {
     double discount,
   ) async {
     await DBHelper.insert('orderitems', {
-      'id': orderId,
+      'order_id': orderId,
       'product_id': productId,
       'product_name': productName,
       'product_price': productPrice,
@@ -108,7 +108,7 @@ class Orders with ChangeNotifier {
         .map(
           (e) => Order(
             id: e['id'],
-            productid: e['product_id'],
+            productid: 123,
             subtotal: e['subtotal'],
             discount: e['discount'],
             returnAmount: e['returnAmount'],
@@ -120,5 +120,19 @@ class Orders with ChangeNotifier {
         )
         .toList();
     notifyListeners();
+  }
+
+  Future<List<int>> fetchingOrderItemsFromDB(int orderId) async {
+    List<Map<String, dynamic>> orderItemsData =
+        await DBHelper.getOrderItemsByOrderId(orderId);
+
+    List<int> productIds = [];
+
+    for (var itemData in orderItemsData) {
+      int productId = itemData['product_id'];
+      productIds.add(productId);
+    }
+
+    return productIds;
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:pixelone/model/product_model.dart';
 import 'package:pixelone/providers/cart.dart';
@@ -36,16 +38,18 @@ class _OrderScreenState extends State<OrderScreen> {
           final order = orders[index];
 
           return GestureDetector(
-            onTap: () {
+            onTap: () async {
               if (order.status == OrderStatus.suspended) {
-                Product? suspendedProduct =
-                    Provider.of<Products>(context, listen: false)
-                        .findbyid(order.productid);
-
-                if (suspendedProduct != null) {
-                  cartProvider.addToCart(suspendedProduct);
-                  Navigator.pop(context);
+                List<int> productIds =
+                    await Provider.of<Orders>(context, listen: false)
+                        .fetchingOrderItemsFromDB(order.id);
+                for (int productId in productIds) {
+                  Product? suspendedProduct =
+                      Provider.of<Products>(context, listen: false)
+                          .findbyid(productId);
+                  cartProvider.addToCart(suspendedProduct!);
                 }
+                Navigator.pop(context);
               }
             },
             child: ListTile(

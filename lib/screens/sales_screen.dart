@@ -640,23 +640,21 @@ class _SalesScreenState extends State<SalesScreen> {
                         onPressed: cartItems.isEmpty
                             ? null
                             : () async {
+                                final orderId = await orderProvider.storeOrders(
+                                  // productId,
+                                  subtotal,
+                                  discount,
+                                  returnAmount,
+                                  dueAmount,
+                                  total,
+                                  paidAmount,
+                                  status = OrderStatus.suspended,
+                                );
                                 for (Product product in cartItems) {
                                   productId = product.id;
                                   productName = product.name;
                                   productPrice = product.price;
                                   productQuantity = product.quantity;
-
-                                  final orderId =
-                                      await orderProvider.storeOrders(
-                                    productId,
-                                    subtotal,
-                                    discount,
-                                    returnAmount,
-                                    dueAmount,
-                                    total,
-                                    paidAmount,
-                                    status = OrderStatus.suspended,
-                                  );
 
                                   if (orderId != 0) {
                                     orderProvider.storeOderItems(
