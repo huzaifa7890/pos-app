@@ -30,6 +30,7 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   Future<void> _refreshProducts() async {
+    await productProvider.storingDataInDbFromAPI();
     await productProvider.fetchingProductFromDB();
   }
 
@@ -78,7 +79,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     setState(() {
                       isRefreshing = true;
                     });
-                    productProvider.fetchingProductFromDB().then((_) {
+                    productProvider.storingDataInDbFromAPI().then((_) {
                       setState(() {
                         isRefreshing = false;
                       });

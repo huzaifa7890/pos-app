@@ -36,4 +36,14 @@ class DBHelper {
   static Future _onConfigure(Database db) async {
     await db.execute('PRAGMA foreign_keys = ON');
   }
+
+  static Future<List<Map<String, dynamic>>> getOrderItemsByOrderId(
+      orderId) async {
+    final db = await DBHelper.database();
+    return db.query(
+      'orderitems',
+      where: 'order_id = ?',
+      whereArgs: [orderId],
+    );
+  }
 }

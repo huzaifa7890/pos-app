@@ -8,12 +8,9 @@ import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_orders.dart';
 import 'package:pixelone/screens/addingtocart_screen.dart';
 import 'package:pixelone/screens/order_screen.dart';
+import 'package:pixelone/widgets/print.dart';
+import 'package:pixelone/widgets/sales_dialog.dart';
 import 'package:provider/provider.dart';
-
-enum OrderStatus {
-  completed,
-  suspended,
-}
 
 class SalesScreen extends StatefulWidget {
   const SalesScreen({super.key});
@@ -27,8 +24,7 @@ class SalesScreen extends StatefulWidget {
 class _SalesScreenState extends State<SalesScreen> {
   late Products productProvider;
 
-  late bool status;
-
+  OrderStatus status = OrderStatus.suspended;
   @override
   void initState() {
     super.initState();
@@ -56,7 +52,13 @@ class _SalesScreenState extends State<SalesScreen> {
         title: const Text('Sales'),
         actions: [
           ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: ((context) => const OrderScreen())),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
                 backgroundColor: Colors.white,
@@ -66,7 +68,13 @@ class _SalesScreenState extends State<SalesScreen> {
             width: 5,
           ),
           ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PrintScreen(),
+                    ));
+              },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
                 backgroundColor: Colors.white,
@@ -632,21 +640,21 @@ class _SalesScreenState extends State<SalesScreen> {
                         onPressed: cartItems.isEmpty
                             ? null
                             : () async {
+                                final orderId = await orderProvider.storeOrders(
+                                  // productId,
+                                  subtotal,
+                                  discount,
+                                  returnAmount,
+                                  dueAmount,
+                                  total,
+                                  paidAmount,
+                                  status = OrderStatus.suspended,
+                                );
                                 for (Product product in cartItems) {
                                   productId = product.id;
                                   productName = product.name;
                                   productPrice = product.price;
                                   productQuantity = product.quantity;
-
-                                  final orderId =
-                                      await orderProvider.storeOrders(
-                                          subtotal,
-                                          discount,
-                                          returnAmount,
-                                          dueAmount,
-                                          total,
-                                          paidAmount,
-                                          status = false);
 
                                   if (orderId != 0) {
                                     orderProvider.storeOderItems(
@@ -674,41 +682,48 @@ class _SalesScreenState extends State<SalesScreen> {
                         onPressed: cartItems.isEmpty
                             ? null
                             : () async {
-                                for (Product product in cartItems) {
-                                  productId = product.id;
-                                  productName = product.name;
-                                  productPrice = product.price;
-                                  productQuantity = product.quantity;
-
-                                  final orderId =
-                                      await orderProvider.storeOrders(
-                                          subtotal,
-                                          discount,
-                                          returnAmount,
-                                          dueAmount,
-                                          total,
-                                          paidAmount,
-                                          status = true);
-
-                                  if (orderId != 0) {
-                                    orderProvider.storeOderItems(
-                                      orderId,
-                                      productId,
-                                      productName,
-                                      productPrice,
-                                      productQuantity,
-                                      discount,
-                                    );
-                                  }
-                                }
-                                cartProvider.setPaidAmount(0);
-                                cartProvider.clearCart();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const OrderScreen()),
+                                double totalAmount = total;
+                                await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomDialog(totalAmount);
+                                  },
                                 );
+                                // for (Product product in cartItems) {
+                                //   productId = product.id;
+                                //   productName = product.name;
+                                //   productPrice = product.price;
+                                //   productQuantity = product.quantity;
+
+                                //   final orderId =
+                                //       await orderProvider.storeOrders(
+                                //           subtotal,
+                                //           discount,
+                                //           returnAmount,
+                                //           dueAmount,
+                                //           total,
+                                //           paidAmount,
+                                //           status = true);
+
+                                //   if (orderId != 0) {
+                                //     orderProvider.storeOderItems(
+                                //       orderId,
+                                //       productId,
+                                //       productName,
+                                //       productPrice,
+                                //       productQuantity,
+                                //       discount,
+                                //     );
+                                //   }
+                                // }
+                                // cartProvider.setPaidAmount(0);
+                                // cartProvider.clearCart();
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //       builder: (context) =>
+                                //           const OrderScreen()),
+                                // );
                               },
                         child: const Text('Pay'),
                       ),
