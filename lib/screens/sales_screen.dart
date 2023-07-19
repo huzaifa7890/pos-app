@@ -8,7 +8,7 @@ import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_orders.dart';
 import 'package:pixelone/screens/addingtocart_screen.dart';
 import 'package:pixelone/screens/order_screen.dart';
-import 'package:pixelone/widgets/print.dart';
+import 'package:pixelone/screens/print_screen.dart';
 import 'package:pixelone/widgets/sales_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -42,7 +42,7 @@ class _SalesScreenState extends State<SalesScreen> {
 
     double subtotal = cartProvider.calculateSubtotal();
     double discount = cartProvider.discount;
-    double total = subtotal - discount;
+    double total = cartProvider.calculateTotal(subtotal);
     double paidAmount = cartProvider.paidAmount;
     double returnAmount = cartProvider.returnAmount(total);
     double dueAmount = cartProvider.dueAmount(total);

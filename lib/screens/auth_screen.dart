@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:pixelone/screens/home_screen.dart';
 import 'package:pixelone/model/http_exception.dart';
@@ -34,12 +32,13 @@ class _AuthScreenState extends State<AuthScreen> {
       if (!isLogin) {
         await Provider.of<Auth>(context, listen: false)
             .signup(fullname, business, email, password, phoneno);
-
+        if (!mounted) return;
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: ((ctx) => const HomeScreen())),
         );
       } else {
         await Provider.of<Auth>(context, listen: false).login(email, password);
+        if (!mounted) return;
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: ((ctx) => const HomeScreen())),
         );

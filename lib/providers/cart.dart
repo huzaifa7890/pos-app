@@ -102,4 +102,9 @@ class Cart with ChangeNotifier {
     }
     return subtotal;
   }
+
+  double calculateTotal(subtotal) {
+    double total = subtotal - discount;
+    return total;
+  }
 }

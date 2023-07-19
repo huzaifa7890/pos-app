@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:pixelone/model/product_model.dart';
 import 'package:pixelone/providers/cart.dart';
@@ -43,13 +41,15 @@ class _OrderScreenState extends State<OrderScreen> {
                 List<int> productIds =
                     await Provider.of<Orders>(context, listen: false)
                         .fetchingOrderItemsFromDB(order.id);
+                if (!mounted) return;
+
                 for (int productId in productIds) {
                   Product? suspendedProduct =
                       Provider.of<Products>(context, listen: false)
                           .findbyid(productId);
                   cartProvider.addToCart(suspendedProduct!);
                 }
-                Navigator.pop(context);
+                Navigator.pop(context, order.id);
               }
             },
             child: ListTile(
