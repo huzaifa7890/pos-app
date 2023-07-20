@@ -23,7 +23,7 @@ class SalesScreen extends StatefulWidget {
 
 class _SalesScreenState extends State<SalesScreen> {
   late Products productProvider;
-
+  int? suspendedOrderId;
   OrderStatus status = OrderStatus.suspended;
   @override
   void initState() {
@@ -52,12 +52,15 @@ class _SalesScreenState extends State<SalesScreen> {
         title: const Text('Sales'),
         actions: [
           ElevatedButton(
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                final int? sid = await Navigator.push<int>(
                   context,
                   MaterialPageRoute(
                       builder: ((context) => const OrderScreen())),
                 );
+                setState(() {
+                  suspendedOrderId = sid;
+                });
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
@@ -401,7 +404,6 @@ class _SalesScreenState extends State<SalesScreen> {
       double dueAmount) {
     Cart cartProvider = Provider.of<Cart>(context, listen: false);
     Orders orderProvider = Provider.of<Orders>(context, listen: false);
-
     int productId;
     String productName;
     double productPrice;
@@ -640,23 +642,51 @@ class _SalesScreenState extends State<SalesScreen> {
                         onPressed: cartItems.isEmpty
                             ? null
                             : () async {
-                                final orderId = await orderProvider.storeOrders(
-                                  // productId,
-                                  subtotal,
-                                  discount,
-                                  returnAmount,
-                                  dueAmount,
-                                  total,
-                                  paidAmount,
-                                  status = OrderStatus.suspended,
-                                );
-                                for (Product product in cartItems) {
-                                  productId = product.id;
-                                  productName = product.name;
-                                  productPrice = product.price;
-                                  productQuantity = product.quantity;
+                                if (suspendedOrderId != null) {
+                                  // Update existing order
+                                  await orderProvider.storeOrders(
+                                    suspendedOrderId,
+                                    subtotal,
+                                    discount,
+                                    returnAmount,
+                                    dueAmount,
+                                    total,
+                                    paidAmount,
+                                    OrderStatus.suspended,
+                                  );
 
-                                  if (orderId != 0) {
+                                  for (Product product in cartItems) {
+                                    productId = product.id;
+                                    productName = product.name;
+                                    productPrice = product.price;
+                                    productQuantity = product.quantity;
+                                    orderProvider.storeOderItems(
+                                      suspendedOrderId!,
+                                      productId,
+                                      productName,
+                                      productPrice,
+                                      productQuantity,
+                                      discount,
+                                    );
+                                  }
+                                } else {
+                                  final orderId =
+                                      await orderProvider.storeOrders(
+                                    null,
+                                    subtotal,
+                                    discount,
+                                    returnAmount,
+                                    dueAmount,
+                                    total,
+                                    paidAmount,
+                                    OrderStatus.suspended,
+                                  );
+
+                                  for (Product product in cartItems) {
+                                    productId = product.id;
+                                    productName = product.name;
+                                    productPrice = product.price;
+                                    productQuantity = product.quantity;
                                     orderProvider.storeOderItems(
                                       orderId,
                                       productId,
@@ -667,14 +697,18 @@ class _SalesScreenState extends State<SalesScreen> {
                                     );
                                   }
                                 }
+
                                 cartProvider.setPaidAmount(0);
                                 cartProvider.clearCart();
-                                Navigator.push(
+                                final int? sid = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const OrderScreen()),
+                                    builder: (context) => const OrderScreen(),
+                                  ),
                                 );
+                                setState(() {
+                                  suspendedOrderId = sid;
+                                });
                               },
                         child: const Text('Suspend'),
                       ),
@@ -727,6 +761,11 @@ class _SalesScreenState extends State<SalesScreen> {
                               },
                         child: const Text('Pay'),
                       ),
+                      ElevatedButton(
+                          onPressed: () {
+                            cartProvider.clearCart();
+                          },
+                          child: const Text('Clear Cart'))
                     ],
                   ),
                 ],

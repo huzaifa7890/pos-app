@@ -91,6 +91,9 @@ class Cart with ChangeNotifier {
   }
 
   void clearCart() {
+    dueAmount(0);
+    setDiscount(0);
+    setPaidAmount(0);
     _cartItems.clear();
     notifyListeners();
   }
