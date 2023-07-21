@@ -15,13 +15,12 @@ class CustomDialog extends StatefulWidget {
 
 class _CustomDialogState extends State<CustomDialog> {
   int selectedAmount = 0;
-  int? SuspendedorderId;
+  int? suspendedorderId;
   @override
   Widget build(BuildContext context) {
     List<Product> cartItems = Provider.of<Cart>(context).cartItems;
     Cart cartProvider = Provider.of<Cart>(context, listen: false);
     Orders orderProvider = Provider.of<Orders>(context, listen: false);
-    print(SuspendedorderId);
     double subtotal = cartProvider.calculateSubtotal();
     double discount = cartProvider.discount;
     double total = cartProvider.calculateTotal(subtotal);
@@ -254,10 +253,10 @@ class _CustomDialogState extends State<CustomDialog> {
                   const SizedBox(width: 8.0),
                   CElevatedButton(
                     onPressed: () async {
-                      if (SuspendedorderId != null) {
+                      if (suspendedorderId != null) {
                         // Update existing order
                         await orderProvider.storeOrders(
-                          SuspendedorderId,
+                          suspendedorderId,
                           subtotal,
                           discount,
                           returnAmount,
@@ -269,7 +268,7 @@ class _CustomDialogState extends State<CustomDialog> {
 
                         for (Product product in cartItems) {
                           orderProvider.storeOderItems(
-                            SuspendedorderId!,
+                            suspendedorderId!,
                             product.id,
                             product.name,
                             product.price,
