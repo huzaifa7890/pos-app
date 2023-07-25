@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pixelone/db_helper/product_db.dart';
+import 'package:sqflite/sqflite.dart';
 
 enum OrderStatus {
   suspended,
@@ -58,7 +59,7 @@ class Orders with ChangeNotifier {
   }
 
   Future<int> storeOrders(
-    // int productid,
+    int? suspendedOrderId,
     double subtotal,
     double discount,
     double returnAmount,
@@ -68,23 +69,44 @@ class Orders with ChangeNotifier {
     OrderStatus status,
   ) async {
     final db = await DBHelper.database();
-    final orderId = await db.insert('orders', {
-      'product_id': 123,
-      'subtotal': subtotal,
-      'discount': discount,
-      'returnAmount': returnAmount,
-      'dueAmount': dueAmount,
-      'total': total,
-      'paidAmount': paidAmount,
-      'status': _mapOrderStatusToInt(status),
-    });
+    int orderId;
+
+    if (suspendedOrderId != null) {
+      orderId = await db.update(
+        'orders',
+        {
+          'subtotal': subtotal,
+          'discount': discount,
+          'returnAmount': returnAmount,
+          'dueAmount': dueAmount,
+          'total': total,
+          'paidAmount': paidAmount,
+          'status': _mapOrderStatusToInt(status),
+        },
+        where: 'id = ?',
+        whereArgs: [suspendedOrderId],
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    } else {
+      // Insert new order
+      final newOrderData = {
+        'subtotal': subtotal,
+        'discount': discount,
+        'returnAmount': returnAmount,
+        'dueAmount': dueAmount,
+        'total': total,
+        'paidAmount': paidAmount,
+        'status': _mapOrderStatusToInt(status),
+      };
+      orderId = await db.insert('orders', newOrderData);
+    }
 
     notifyListeners();
     return orderId;
   }
 
   Future<void> storeOderItems(
-    orderId,
+    int orderId,
     int productId,
     String productName,
     double productPrice,

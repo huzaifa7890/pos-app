@@ -23,14 +23,23 @@ class DBHelper {
     );
   }
 
+  static Future<void> update(String table, Map<String, Object> data) async {
+    final db = await DBHelper.database();
+    db.update(
+      table,
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
   static Future<List<Map<String, dynamic>>> getData(String table) async {
     final db = await DBHelper.database();
     return db.query(table);
   }
 
-  static Future<void> deleteTable() async {
+  static Future<void> deleteTable(String table) async {
     final db = await DBHelper.database();
-    await db.execute('DROP TABLE IF EXISTS products');
+    await db.execute('DROP TABLE IF EXISTS $table');
   }
 
   static Future _onConfigure(Database db) async {

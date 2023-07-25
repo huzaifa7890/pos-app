@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:pixelone/components/c_elevated_button.dart';
+import 'package:pixelone/model/product_model.dart';
+import 'package:pixelone/providers/cart.dart';
+import 'package:pixelone/providers/orders.dart';
+import 'package:pixelone/screens/order_screen.dart';
+import 'package:provider/provider.dart';
 
 class CustomDialog extends StatefulWidget {
-  const CustomDialog(this.totalAmount, {super.key});
-  final double totalAmount;
-
+  final int? suspendedOrderId;
+  const CustomDialog(this.suspendedOrderId, {super.key});
   @override
   State<CustomDialog> createState() => _CustomDialogState();
 }
 
 class _CustomDialogState extends State<CustomDialog> {
   int selectedAmount = 0;
-
+  int? suspendedorderId;
   @override
   Widget build(BuildContext context) {
-    double remainingBalance = widget.totalAmount - selectedAmount;
+    List<Product> cartItems = Provider.of<Cart>(context).cartItems;
+    Cart cartProvider = Provider.of<Cart>(context, listen: false);
+    Orders orderProvider = Provider.of<Orders>(context, listen: false);
+    double subtotal = cartProvider.calculateSubtotal();
+    double discount = cartProvider.discount;
+    double total = cartProvider.calculateTotal(subtotal);
+    double remainingBalance = total - selectedAmount;
+    double dueAmount = cartProvider.dueAmount(remainingBalance);
+    double returnAmount = cartProvider.returnAmount(remainingBalance);
+    double paidAmount = cartProvider.paidAmount;
     return Dialog(
       child: SingleChildScrollView(
         child: Padding(
@@ -66,16 +79,51 @@ class _CustomDialogState extends State<CustomDialog> {
                         const SizedBox(height: 16.0),
                         Row(
                           children: [
-                            const Expanded(
+                            Expanded(
                               child: Text(
-                                'Total Items',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                'Total Items ${cartItems.length}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                             const SizedBox(width: 16.0),
                             Expanded(
                               child: Text(
-                                'Total Payable ${widget.totalAmount}',
+                                'Total Payable $total',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16.0),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Subtotal $subtotal',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            const SizedBox(width: 16.0),
+                            const Text(
+                              'Discount:',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: TextField(
+                                onChanged: (value) {
+                                  cartProvider.setDiscount(
+                                      double.tryParse(value) ?? 0.0);
+                                },
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
@@ -95,7 +143,7 @@ class _CustomDialogState extends State<CustomDialog> {
                             const SizedBox(width: 16.0),
                             Expanded(
                               child: Text(
-                                'Due Amount $remainingBalance',
+                                'Return Amount $returnAmount',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
@@ -103,6 +151,17 @@ class _CustomDialogState extends State<CustomDialog> {
                           ],
                         ),
                         const SizedBox(height: 16.0),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Due Amount $dueAmount',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -187,17 +246,68 @@ class _CustomDialogState extends State<CustomDialog> {
                 children: [
                   CElevatedButton(
                     onPressed: () {
-                      // Handle dialog actions or dismiss the dialog
                       Navigator.pop(context);
                     },
                     child: const Text('Cancel'),
                   ),
                   const SizedBox(width: 8.0),
                   CElevatedButton(
-                    onPressed: () {
-                      // Perform necessary actions based on field values
-                      // and dismiss the dialog
+                    onPressed: () async {
+                      if (suspendedorderId != null) {
+                        // Update existing order
+                        await orderProvider.storeOrders(
+                          suspendedorderId,
+                          subtotal,
+                          discount,
+                          returnAmount,
+                          dueAmount,
+                          total,
+                          paidAmount,
+                          OrderStatus.completed,
+                        );
+
+                        for (Product product in cartItems) {
+                          orderProvider.storeOderItems(
+                            suspendedorderId!,
+                            product.id,
+                            product.name,
+                            product.price,
+                            product.quantity,
+                            discount,
+                          );
+                        }
+                      } else {
+                        final orderId = await orderProvider.storeOrders(
+                          null,
+                          subtotal,
+                          discount,
+                          returnAmount,
+                          dueAmount,
+                          total,
+                          paidAmount,
+                          OrderStatus.completed,
+                        );
+
+                        for (Product product in cartItems) {
+                          orderProvider.storeOderItems(
+                            orderId,
+                            product.id,
+                            product.name,
+                            product.price,
+                            product.quantity,
+                            discount,
+                          );
+                        }
+                      }
+                      cartProvider.clearCart();
+                      if (!mounted) return;
                       Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const OrderScreen(),
+                        ),
+                      );
                     },
                     child: const Text('Save'),
                   ),

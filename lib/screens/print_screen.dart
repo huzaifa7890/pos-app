@@ -166,7 +166,7 @@ class PrintScreen extends StatelessWidget {
                         );
                       }
                     },
-                    child: const Text('Generate PDF & Print'),
+                    child: const Text('Print'),
                   ),
                 ],
               ),

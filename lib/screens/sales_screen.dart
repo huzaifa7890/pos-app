@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:pixelone/model/product_model.dart';
 import 'package:pixelone/providers/cart.dart';
@@ -23,7 +21,7 @@ class SalesScreen extends StatefulWidget {
 
 class _SalesScreenState extends State<SalesScreen> {
   late Products productProvider;
-
+  int? suspendedOrderId;
   OrderStatus status = OrderStatus.suspended;
   @override
   void initState() {
@@ -52,12 +50,15 @@ class _SalesScreenState extends State<SalesScreen> {
         title: const Text('Sales'),
         actions: [
           ElevatedButton(
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                final int? sid = await Navigator.push<int>(
                   context,
                   MaterialPageRoute(
                       builder: ((context) => const OrderScreen())),
                 );
+                setState(() {
+                  suspendedOrderId = sid;
+                });
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
@@ -402,10 +403,6 @@ class _SalesScreenState extends State<SalesScreen> {
     Cart cartProvider = Provider.of<Cart>(context, listen: false);
     Orders orderProvider = Provider.of<Orders>(context, listen: false);
 
-    int productId;
-    String productName;
-    double productPrice;
-    int productQuantity;
     final filteredList =
         Provider.of<Products>(context, listen: false).getFilteredProducts();
     return Row(
@@ -528,7 +525,7 @@ class _SalesScreenState extends State<SalesScreen> {
                     ),
                   const Divider(),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const Text(
                         'Subtotal:',
@@ -542,46 +539,12 @@ class _SalesScreenState extends State<SalesScreen> {
                         subtotal.toStringAsFixed(2),
                         style: const TextStyle(fontSize: 16.0),
                       ),
-                      const Text(
-                        'Discount:',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 10.0),
-                      SizedBox(
-                        width: 50,
-                        child: TextFormField(
-                          initialValue: discount.toStringAsFixed(0),
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true),
-                          enabled: cartItems.isNotEmpty,
-                          onChanged: (value) {
-                            cartProvider
-                                .setDiscount(double.tryParse(value) ?? 0.0);
-                          },
-                          decoration: const InputDecoration(),
-                        ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 10.0),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Return Amount:',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 10.0),
-                      Text(
-                        returnAmount.toStringAsFixed(2),
-                        style: const TextStyle(fontSize: 16.0),
-                      ),
                       const Text(
                         'Due Amount:',
                         style: TextStyle(
@@ -598,7 +561,7 @@ class _SalesScreenState extends State<SalesScreen> {
                   ),
                   const SizedBox(height: 10.0),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const Text(
                         'Total:',
@@ -607,29 +570,9 @@ class _SalesScreenState extends State<SalesScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(width: 10.0),
                       Text(
                         total.toStringAsFixed(2),
                         style: const TextStyle(fontSize: 16.0),
-                      ),
-                      const Text(
-                        'Paid Amount:',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 10.0),
-                      SizedBox(
-                        width: 50.0,
-                        child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          enabled: cartItems.isNotEmpty,
-                          onChanged: (value) {
-                            cartProvider
-                                .setPaidAmount(double.tryParse(value) ?? 0);
-                          },
-                        ),
                       ),
                     ],
                   ),
@@ -640,41 +583,56 @@ class _SalesScreenState extends State<SalesScreen> {
                         onPressed: cartItems.isEmpty
                             ? null
                             : () async {
-                                final orderId = await orderProvider.storeOrders(
-                                  // productId,
-                                  subtotal,
-                                  discount,
-                                  returnAmount,
-                                  dueAmount,
-                                  total,
-                                  paidAmount,
-                                  status = OrderStatus.suspended,
-                                );
-                                for (Product product in cartItems) {
-                                  productId = product.id;
-                                  productName = product.name;
-                                  productPrice = product.price;
-                                  productQuantity = product.quantity;
+                                if (suspendedOrderId != null) {
+                                  // Update existing order
+                                  await orderProvider.storeOrders(
+                                    suspendedOrderId,
+                                    subtotal,
+                                    discount,
+                                    returnAmount,
+                                    dueAmount,
+                                    total,
+                                    paidAmount,
+                                    OrderStatus.suspended,
+                                  );
 
-                                  if (orderId != 0) {
+                                  for (Product product in cartItems) {
+                                    orderProvider.storeOderItems(
+                                      suspendedOrderId!,
+                                      product.id,
+                                      product.name,
+                                      product.price,
+                                      product.quantity,
+                                      discount,
+                                    );
+                                  }
+                                } else {
+                                  final orderId =
+                                      await orderProvider.storeOrders(
+                                    null,
+                                    subtotal,
+                                    discount,
+                                    returnAmount,
+                                    dueAmount,
+                                    total,
+                                    paidAmount,
+                                    OrderStatus.suspended,
+                                  );
+
+                                  for (Product product in cartItems) {
                                     orderProvider.storeOderItems(
                                       orderId,
-                                      productId,
-                                      productName,
-                                      productPrice,
-                                      productQuantity,
+                                      product.id,
+                                      product.name,
+                                      product.price,
+                                      product.quantity,
                                       discount,
                                     );
                                   }
                                 }
+
                                 cartProvider.setPaidAmount(0);
                                 cartProvider.clearCart();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const OrderScreen()),
-                                );
                               },
                         child: const Text('Suspend'),
                       ),
@@ -682,51 +640,20 @@ class _SalesScreenState extends State<SalesScreen> {
                         onPressed: cartItems.isEmpty
                             ? null
                             : () async {
-                                double totalAmount = total;
                                 await showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return CustomDialog(totalAmount);
+                                    return CustomDialog(suspendedOrderId!);
                                   },
                                 );
-                                // for (Product product in cartItems) {
-                                //   productId = product.id;
-                                //   productName = product.name;
-                                //   productPrice = product.price;
-                                //   productQuantity = product.quantity;
-
-                                //   final orderId =
-                                //       await orderProvider.storeOrders(
-                                //           subtotal,
-                                //           discount,
-                                //           returnAmount,
-                                //           dueAmount,
-                                //           total,
-                                //           paidAmount,
-                                //           status = true);
-
-                                //   if (orderId != 0) {
-                                //     orderProvider.storeOderItems(
-                                //       orderId,
-                                //       productId,
-                                //       productName,
-                                //       productPrice,
-                                //       productQuantity,
-                                //       discount,
-                                //     );
-                                //   }
-                                // }
-                                // cartProvider.setPaidAmount(0);
-                                // cartProvider.clearCart();
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //       builder: (context) =>
-                                //           const OrderScreen()),
-                                // );
                               },
                         child: const Text('Pay'),
                       ),
+                      ElevatedButton(
+                          onPressed: () {
+                            cartProvider.clearCart();
+                          },
+                          child: const Text('Clear Cart'))
                     ],
                   ),
                 ],
