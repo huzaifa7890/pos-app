@@ -21,3 +21,10 @@ class OrderItemsTable {
         'CREATE TABLE orderitems(id INTEGER PRIMARY KEY AUTOINCREMENT,order_id INTEGER,product_id INTEGER,product_name TEXT,product_price DOUBLE,product_quantity INTEGER,discount DOUBLE,FOREIGN KEY (order_id) REFERENCES orders (id),FOREIGN KEY (product_id) REFERENCES products(id))');
   }
 }
+
+class CustomerTable {
+  static Future<void> createTable(Database db) async {
+    await db.execute(
+        'CREATE TABLE customer(id INTEGER PRIMARY KEY AUTOINCREMENT,firstname TEXT, lastname TEXT, address TEXT,phoneno TEXT)');
+  }
+}

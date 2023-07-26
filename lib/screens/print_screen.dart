@@ -200,30 +200,28 @@ Future<File?> generatePdf(BuildContext context) async {
                 pw.Text(
                   'PixelOne',
                   style: pw.TextStyle(
-                    fontSize: 24,
+                    fontSize: 54,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
                 pw.Text(
                   'Save money. Live Better.',
                   style: const pw.TextStyle(
-                    fontSize: 18,
+                    fontSize: 38,
                   ),
                 ),
                 pw.SizedBox(height: 8),
                 pw.Text(
                   'Pakistan SGD',
-                  style: pw.TextStyle(
-                    fontSize: 18,
-                    fontWeight: pw.FontWeight.bold,
+                  style: const pw.TextStyle(
+                    fontSize: 38,
                   ),
                 ),
                 pw.SizedBox(height: 16),
                 pw.Text(
                   'Cart Items:',
-                  style: pw.TextStyle(
-                    fontSize: 18,
-                    fontWeight: pw.FontWeight.bold,
+                  style: const pw.TextStyle(
+                    fontSize: 30,
                   ),
                 ),
                 pw.Table(
@@ -232,30 +230,26 @@ Future<File?> generatePdf(BuildContext context) async {
                       children: [
                         pw.Text(
                           'Product',
-                          style: pw.TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: pw.FontWeight.bold,
+                          style: const pw.TextStyle(
+                            fontSize: 28.0,
                           ),
                         ),
                         pw.Text(
                           'Price',
-                          style: pw.TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: pw.FontWeight.bold,
+                          style: const pw.TextStyle(
+                            fontSize: 28.0,
                           ),
                         ),
                         pw.Text(
                           'Quantity',
-                          style: pw.TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: pw.FontWeight.bold,
+                          style: const pw.TextStyle(
+                            fontSize: 28.0,
                           ),
                         ),
                         pw.Text(
                           'Subtotal',
-                          style: pw.TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: pw.FontWeight.bold,
+                          style: const pw.TextStyle(
+                            fontSize: 28.0,
                           ),
                         ),
                       ],
@@ -263,11 +257,30 @@ Future<File?> generatePdf(BuildContext context) async {
                     for (final product in cartItems)
                       pw.TableRow(
                         children: [
-                          pw.Text(product.name),
-                          pw.Text(product.price.toString()),
-                          pw.Text(product.quantity.toString()),
                           pw.Text(
-                              (product.price * product.quantity).toString()),
+                            product.name,
+                            style: const pw.TextStyle(
+                              fontSize: 28.0,
+                            ),
+                          ),
+                          pw.Text(
+                            product.price.toString(),
+                            style: const pw.TextStyle(
+                              fontSize: 28.0,
+                            ),
+                          ),
+                          pw.Text(
+                            product.quantity.toString(),
+                            style: const pw.TextStyle(
+                              fontSize: 28.0,
+                            ),
+                          ),
+                          pw.Text(
+                            (product.price * product.quantity).toString(),
+                            style: const pw.TextStyle(
+                              fontSize: 28.0,
+                            ),
+                          ),
                         ],
                       ),
                   ],
@@ -276,21 +289,21 @@ Future<File?> generatePdf(BuildContext context) async {
                 pw.Text(
                   'Subtotal:     $subtotal',
                   style: pw.TextStyle(
-                    fontSize: 18,
+                    fontSize: 48,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
                 pw.Text(
                   'Discount:    $discount',
                   style: pw.TextStyle(
-                    fontSize: 18,
+                    fontSize: 48,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
                 pw.Text(
                   'Total:           $total',
                   style: pw.TextStyle(
-                    fontSize: 18,
+                    fontSize: 48,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
@@ -298,13 +311,13 @@ Future<File?> generatePdf(BuildContext context) async {
                 pw.Text(
                   '# ITEMS SOLD ${cartItems.length.toString()}',
                   style: pw.TextStyle(
-                      fontWeight: pw.FontWeight.bold, fontSize: 30),
+                      fontWeight: pw.FontWeight.bold, fontSize: 50),
                 ),
                 pw.SizedBox(height: 16),
                 pw.Text(
                   formatter.format(now),
                   style: pw.TextStyle(
-                    fontSize: 18,
+                    fontSize: 38,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
