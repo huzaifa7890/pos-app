@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pixelone/model/customer_model.dart';
 import 'package:pixelone/model/product_model.dart';
 import 'package:pixelone/providers/cart.dart';
 import 'package:pixelone/providers/customer.dart';
@@ -443,8 +442,7 @@ class _SalesScreenState extends State<SalesScreen> {
                               Provider.of<Customer>(context, listen: false)
                                   .setSearchText(value),
                           controller: TextEditingController(
-                            text:
-                                getSelectedCustomerName(),
+                            text: getSelectedCustomerName(),
                           ),
                         ),
                       ),

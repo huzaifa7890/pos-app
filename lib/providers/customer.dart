@@ -68,7 +68,6 @@ class Customer extends ChangeNotifier {
               address: e['address']),
         )
         .toList();
-    print(items);
     notifyListeners();
   }
 }
