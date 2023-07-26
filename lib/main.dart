@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pixelone/providers/auth.dart';
 import 'package:pixelone/providers/cart.dart';
+import 'package:pixelone/providers/customer.dart';
 import 'package:pixelone/providers/orders.dart';
 import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_orders.dart';
@@ -42,6 +44,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Orders(),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => Customer(),
+        ),
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
@@ -49,6 +54,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Pixelone',
           theme: ThemeData(
+            fontFamily: GoogleFonts.poppins().fontFamily,
             primarySwatch: Palette.primaryPaletteColor,
             textSelectionTheme: const TextSelectionThemeData(
               cursorColor: primaryColor,

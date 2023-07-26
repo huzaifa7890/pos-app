@@ -27,27 +27,15 @@ class Products with ChangeNotifier {
 
   List<Product> getFilteredProducts() {
     if (searchText.isEmpty) {
-      return items;
+      return _items;
     } else {
       final lowercaseSearchText = searchText.toLowerCase();
-      return items
+      return _items
           .where((product) =>
               product.name.toLowerCase().contains(lowercaseSearchText))
           .toList();
     }
   }
-
-  // List<Product> getFilteredCartProducts() {
-  //   if (!showProducts) {
-  //     return [];
-  //   } else {
-  //     final lowercaseSearchText = searchText.toLowerCase();
-  //     return items
-  //         .where((product) =>
-  //             product.name.toLowerCase().contains(lowercaseSearchText))
-  //         .toList();
-  //   }
-  // }
 
   Product? findbyid(int idd) {
     try {

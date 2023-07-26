@@ -11,6 +11,7 @@ class DBHelper {
       await ProductTable.createTable(db);
       await OrdersTable.createTable(db);
       await OrderItemsTable.createTable(db);
+      await CustomerTable.createTable(db);
     }, version: 1, onConfigure: _onConfigure);
   }
 

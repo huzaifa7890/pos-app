@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:pixelone/model/customer_model.dart';
 import 'package:pixelone/model/product_model.dart';
 import 'package:pixelone/providers/cart.dart';
+import 'package:pixelone/providers/customer.dart';
 import 'package:pixelone/providers/orders.dart';
 import 'package:pixelone/providers/products.dart';
 import 'package:pixelone/screens/add_new_orders.dart';
 import 'package:pixelone/screens/addingtocart_screen.dart';
 import 'package:pixelone/screens/order_screen.dart';
 import 'package:pixelone/screens/print_screen.dart';
+import 'package:pixelone/widgets/customer_dialog.dart';
 import 'package:pixelone/widgets/sales_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +31,7 @@ class _SalesScreenState extends State<SalesScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<Customer>(context, listen: false).fetchingCustomerFromDB();
       productProvider = Provider.of<Products>(context, listen: false);
       productProvider.fetchingProductFromDB();
     });
@@ -402,6 +406,14 @@ class _SalesScreenState extends State<SalesScreen> {
       double dueAmount) {
     Cart cartProvider = Provider.of<Cart>(context, listen: false);
     Orders orderProvider = Provider.of<Orders>(context, listen: false);
+    Customer customerProvider = Provider.of<Customer>(context, listen: false);
+
+    String getSelectedCustomerName() {
+      final selectedCustomer =
+          Provider.of<Customer>(context, listen: false).selectedCustomer;
+
+      return selectedCustomer != null ? selectedCustomer.firstName : '';
+    }
 
     final filteredList =
         Provider.of<Products>(context, listen: false).getFilteredProducts();
@@ -418,13 +430,71 @@ class _SalesScreenState extends State<SalesScreen> {
             ),
             child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  TextFormField(
-                    keyboardType: TextInputType.name,
-                    decoration: const InputDecoration(
-                      labelText: 'Walk-in Customer',
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          keyboardType: TextInputType.name,
+                          decoration: const InputDecoration(
+                            labelText: 'Walk-in Customer',
+                          ),
+                          onChanged: (value) =>
+                              Provider.of<Customer>(context, listen: false)
+                                  .setSearchText(value),
+                          controller: TextEditingController(
+                            text:
+                                getSelectedCustomerName(),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const CustomerDialog();
+                            },
+                          );
+                        },
+                        icon: const Icon(Icons.add_circle_outline_sharp),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          customerProvider.selectedCustomer == null;
+                        },
+                        icon: const Icon(Icons.delete_forever_outlined),
+                      ),
+                    ],
+                  ),
+                  Consumer<Customer>(
+                    builder: (context, customerProvider, child) {
+                      final filteredCustomers =
+                          customerProvider.getFilteredCustomers();
+
+                      return customerProvider.searchText.isNotEmpty
+                          ? SizedBox(
+                              height: 150,
+                              width: 300,
+                              child: ListView.separated(
+                                itemCount: filteredCustomers.length,
+                                separatorBuilder: (context, index) =>
+                                    const Divider(),
+                                itemBuilder: (context, index) {
+                                  final customer = filteredCustomers[index];
+                                  return ListTile(
+                                    title: Text(customer.firstName),
+                                    subtitle: Text(customer.address),
+                                    onTap: () {
+                                      customerProvider
+                                          .setSelectedCustomer(customer);
+                                    },
+                                  );
+                                },
+                              ),
+                            )
+                          : const SizedBox.shrink();
+                    },
                   ),
                   const SizedBox(height: 10.0),
                   TextFormField(
@@ -678,8 +748,9 @@ class _SalesScreenState extends State<SalesScreen> {
                     children: [
                       Expanded(
                         child: TextFormField(
-                          onChanged: (value) => Provider.of<Products>(context)
-                              .setSearchText(value),
+                          onChanged: (value) =>
+                              Provider.of<Products>(context, listen: false)
+                                  .setSearchText(value),
                           decoration: const InputDecoration(
                             labelText: 'Search Product',
                           ),

@@ -88,7 +88,6 @@ class Orders with ChangeNotifier {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     } else {
-      // Insert new order
       final newOrderData = {
         'subtotal': subtotal,
         'discount': discount,
