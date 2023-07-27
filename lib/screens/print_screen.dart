@@ -12,7 +12,10 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
 class PrintScreen extends StatelessWidget {
-  const PrintScreen({Key? key}) : super(key: key);
+  final int orderId;
+  final int paidAmount;
+  const PrintScreen({Key? key, required this.orderId, required this.paidAmount})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,7 @@ class PrintScreen extends StatelessWidget {
                       fontSize: 18,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
                   const Text(
                     'Pakistan SGD',
                     style: TextStyle(
@@ -55,11 +58,11 @@ class PrintScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Cart Items:',
-                    style: TextStyle(
-                      fontSize: 18,
+                  const SizedBox(height: 6),
+                  Text(
+                    'Order # $orderId',
+                    style: const TextStyle(
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -129,6 +132,13 @@ class PrintScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
+                    'PaidAmount: $paidAmount',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
                     'Discount:    $discount',
                     style: const TextStyle(
                       fontSize: 18,
@@ -136,7 +146,7 @@ class PrintScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Total:           $total',
+                    'Total:          $total',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -159,12 +169,14 @@ class PrintScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () async {
-                      final pdfFile = await generatePdf(context);
+                      final pdfFile =
+                          await generatePdf(context, orderId, paidAmount);
                       if (pdfFile != null) {
                         await Printing.layoutPdf(
                           onLayout: (_) async => pdfFile.readAsBytes(),
                         );
                       }
+                      cartProvider.clearCart();
                     },
                     child: const Text('Print'),
                   ),
@@ -178,7 +190,7 @@ class PrintScreen extends StatelessWidget {
   }
 }
 
-Future<File?> generatePdf(BuildContext context) async {
+Future<File?> generatePdf(BuildContext context, orderId, paidAmount) async {
   final cartProvider = Provider.of<Cart>(context, listen: false);
   final cartItems = cartProvider.cartItems;
   final discount = cartProvider.discount;
@@ -200,7 +212,7 @@ Future<File?> generatePdf(BuildContext context) async {
                 pw.Text(
                   'PixelOne',
                   style: pw.TextStyle(
-                    fontSize: 54,
+                    fontSize: 40,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
@@ -210,46 +222,56 @@ Future<File?> generatePdf(BuildContext context) async {
                     fontSize: 38,
                   ),
                 ),
-                pw.SizedBox(height: 8),
+                pw.SizedBox(height: 4),
                 pw.Text(
                   'Pakistan SGD',
                   style: const pw.TextStyle(
                     fontSize: 38,
                   ),
                 ),
-                pw.SizedBox(height: 16),
+                pw.SizedBox(height: 6),
                 pw.Text(
-                  'Cart Items:',
+                  'Order No $orderId',
                   style: const pw.TextStyle(
                     fontSize: 30,
                   ),
                 ),
+                pw.SizedBox(height: 3),
                 pw.Table(
                   children: [
                     pw.TableRow(
                       children: [
-                        pw.Text(
-                          'Product',
-                          style: const pw.TextStyle(
-                            fontSize: 28.0,
+                        pw.Expanded(
+                          child: pw.Text(
+                            'Product',
+                            style: const pw.TextStyle(
+                              fontSize: 28.0,
+                            ),
                           ),
                         ),
-                        pw.Text(
-                          'Price',
-                          style: const pw.TextStyle(
-                            fontSize: 28.0,
+                        pw.Divider(),
+                        pw.Expanded(
+                          child: pw.Text(
+                            'Price',
+                            style: const pw.TextStyle(
+                              fontSize: 28.0,
+                            ),
                           ),
                         ),
-                        pw.Text(
-                          'Quantity',
-                          style: const pw.TextStyle(
-                            fontSize: 28.0,
+                        pw.Expanded(
+                          child: pw.Text(
+                            'Quantity',
+                            style: const pw.TextStyle(
+                              fontSize: 28.0,
+                            ),
                           ),
                         ),
-                        pw.Text(
-                          'Subtotal',
-                          style: const pw.TextStyle(
-                            fontSize: 28.0,
+                        pw.Expanded(
+                          child: pw.Text(
+                            'Subtotal',
+                            style: const pw.TextStyle(
+                              fontSize: 28.0,
+                            ),
                           ),
                         ),
                       ],
@@ -257,12 +279,15 @@ Future<File?> generatePdf(BuildContext context) async {
                     for (final product in cartItems)
                       pw.TableRow(
                         children: [
-                          pw.Text(
-                            product.name,
-                            style: const pw.TextStyle(
-                              fontSize: 28.0,
+                          pw.Expanded(
+                            child: pw.Text(
+                              product.name,
+                              style: const pw.TextStyle(
+                                fontSize: 28.0,
+                              ),
                             ),
                           ),
+                          pw.Divider(),
                           pw.Text(
                             product.price.toString(),
                             style: const pw.TextStyle(
@@ -285,40 +310,54 @@ Future<File?> generatePdf(BuildContext context) async {
                       ),
                   ],
                 ),
-                pw.SizedBox(height: 16),
-                pw.Text(
-                  'Subtotal:     $subtotal',
-                  style: pw.TextStyle(
-                    fontSize: 48,
-                    fontWeight: pw.FontWeight.bold,
+                pw.SizedBox(height: 6),
+                pw.Align(
+                  alignment: pw.Alignment.centerLeft,
+                  child: pw.Text(
+                    'Subtotal:     $subtotal',
+                    style: const pw.TextStyle(
+                      fontSize: 38,
+                    ),
                   ),
                 ),
-                pw.Text(
-                  'Discount:    $discount',
-                  style: pw.TextStyle(
-                    fontSize: 48,
-                    fontWeight: pw.FontWeight.bold,
+                pw.Align(
+                  alignment: pw.Alignment.centerLeft,
+                  child: pw.Text(
+                    'PaidAmount:$paidAmount',
+                    style: const pw.TextStyle(
+                      fontSize: 38,
+                    ),
                   ),
                 ),
-                pw.Text(
-                  'Total:           $total',
-                  style: pw.TextStyle(
-                    fontSize: 48,
-                    fontWeight: pw.FontWeight.bold,
+                pw.Align(
+                  alignment: pw.Alignment.centerLeft,
+                  child: pw.Text(
+                    'Discount:    $discount',
+                    style: const pw.TextStyle(
+                      fontSize: 38,
+                    ),
                   ),
                 ),
-                pw.SizedBox(height: 16),
+                pw.Align(
+                  alignment: pw.Alignment.centerLeft,
+                  child: pw.Text(
+                    'Total:         $total',
+                    style: const pw.TextStyle(
+                      fontSize: 38,
+                    ),
+                  ),
+                ),
+                pw.SizedBox(height: 6),
                 pw.Text(
                   '# ITEMS SOLD ${cartItems.length.toString()}',
                   style: pw.TextStyle(
-                      fontWeight: pw.FontWeight.bold, fontSize: 50),
+                      fontWeight: pw.FontWeight.bold, fontSize: 35),
                 ),
-                pw.SizedBox(height: 16),
+                pw.SizedBox(height: 6),
                 pw.Text(
                   formatter.format(now),
-                  style: pw.TextStyle(
+                  style: const pw.TextStyle(
                     fontSize: 38,
-                    fontWeight: pw.FontWeight.bold,
                   ),
                 ),
               ],

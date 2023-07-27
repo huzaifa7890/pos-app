@@ -4,6 +4,7 @@ import 'package:pixelone/model/product_model.dart';
 import 'package:pixelone/providers/cart.dart';
 import 'package:pixelone/providers/orders.dart';
 import 'package:pixelone/screens/order_screen.dart';
+import 'package:pixelone/screens/print_screen.dart';
 import 'package:provider/provider.dart';
 
 class CustomDialog extends StatefulWidget {
@@ -15,9 +16,9 @@ class CustomDialog extends StatefulWidget {
 
 class _CustomDialogState extends State<CustomDialog> {
   int selectedAmount = 0;
-  int? suspendedorderId;
   @override
   Widget build(BuildContext context) {
+    final suspendedOrderId = widget.suspendedOrderId;
     List<Product> cartItems = Provider.of<Cart>(context).cartItems;
     Cart cartProvider = Provider.of<Cart>(context, listen: false);
     Orders orderProvider = Provider.of<Orders>(context, listen: false);
@@ -244,72 +245,140 @@ class _CustomDialogState extends State<CustomDialog> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  CElevatedButton(
+                  ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
                     },
                     child: const Text('Cancel'),
                   ),
                   const SizedBox(width: 8.0),
-                  CElevatedButton(
-                    onPressed: () async {
-                      if (suspendedorderId != null) {
-                        // Update existing order
-                        await orderProvider.storeOrders(
-                          suspendedorderId,
-                          subtotal,
-                          discount,
-                          returnAmount,
-                          dueAmount,
-                          total,
-                          paidAmount,
-                          OrderStatus.completed,
-                        );
+                  ElevatedButton(
+                    onPressed: paidAmount < remainingBalance
+                        ? null
+                        : () async {
+                            if (suspendedOrderId != null &&
+                                suspendedOrderId != 0) {
+                              await orderProvider.storeOrders(
+                                suspendedOrderId,
+                                subtotal,
+                                discount,
+                                returnAmount,
+                                dueAmount,
+                                total,
+                                paidAmount,
+                                OrderStatus.completed,
+                              );
 
-                        for (Product product in cartItems) {
-                          orderProvider.storeOderItems(
-                            suspendedorderId!,
-                            product.id,
-                            product.name,
-                            product.price,
-                            product.quantity,
-                            discount,
-                          );
-                        }
-                      } else {
-                        final orderId = await orderProvider.storeOrders(
-                          null,
-                          subtotal,
-                          discount,
-                          returnAmount,
-                          dueAmount,
-                          total,
-                          paidAmount,
-                          OrderStatus.completed,
-                        );
+                              for (Product product in cartItems) {
+                                orderProvider.storeOderItems(
+                                  suspendedOrderId,
+                                  product.id,
+                                  product.name,
+                                  product.price,
+                                  product.quantity,
+                                  discount,
+                                );
+                              }
+                            } else {
+                              final orderId = await orderProvider.storeOrders(
+                                null,
+                                subtotal,
+                                discount,
+                                returnAmount,
+                                dueAmount,
+                                total,
+                                paidAmount,
+                                OrderStatus.completed,
+                              );
 
-                        for (Product product in cartItems) {
-                          orderProvider.storeOderItems(
-                            orderId,
-                            product.id,
-                            product.name,
-                            product.price,
-                            product.quantity,
-                            discount,
-                          );
-                        }
-                      }
-                      cartProvider.clearCart();
-                      if (!mounted) return;
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const OrderScreen(),
-                        ),
-                      );
-                    },
+                              for (Product product in cartItems) {
+                                orderProvider.storeOderItems(
+                                  orderId,
+                                  product.id,
+                                  product.name,
+                                  product.price,
+                                  product.quantity,
+                                  discount,
+                                );
+                              }
+                            }
+                            cartProvider.clearCart();
+                            if (!mounted) return;
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const OrderScreen(),
+                              ),
+                            );
+                          },
                     child: const Text('Save'),
+                  ),
+                  const SizedBox(width: 8.0),
+                  ElevatedButton(
+                    onPressed: paidAmount < remainingBalance
+                        ? null
+                        : () async {
+                            int orderId;
+                            if (suspendedOrderId != 0) {
+                              orderId = await orderProvider.storeOrders(
+                                suspendedOrderId,
+                                subtotal,
+                                discount,
+                                returnAmount,
+                                dueAmount,
+                                total,
+                                paidAmount,
+                                OrderStatus.completed,
+                              );
+
+                              for (Product product in cartItems) {
+                                orderProvider.storeOderItems(
+                                  suspendedOrderId!,
+                                  product.id,
+                                  product.name,
+                                  product.price,
+                                  product.quantity,
+                                  discount,
+                                );
+                              }
+                            } else {
+                              orderId = await orderProvider.storeOrders(
+                                null,
+                                subtotal,
+                                discount,
+                                returnAmount,
+                                dueAmount,
+                                total,
+                                paidAmount,
+                                OrderStatus.completed,
+                              );
+
+                              for (Product product in cartItems) {
+                                orderProvider.storeOderItems(
+                                  orderId,
+                                  product.id,
+                                  product.name,
+                                  product.price,
+                                  product.quantity,
+                                  discount,
+                                );
+                              }
+                            }
+
+                            if (!mounted) return;
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PrintScreen(
+                                  orderId: orderId,
+                                  paidAmount: selectedAmount,
+                                ),
+                              ),
+                            );
+                          },
+                    child: const Text('Save & Print'),
                   ),
                 ],
               ),

@@ -76,7 +76,10 @@ class _SalesScreenState extends State<SalesScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const PrintScreen(),
+                      builder: (context) => const PrintScreen(
+                        orderId: 8,
+                        paidAmount: 10,
+                      ),
                     ));
               },
               style: ElevatedButton.styleFrom(
@@ -116,7 +119,7 @@ class _SalesScreenState extends State<SalesScreen> {
       double returnAmount,
       double dueAmount) {
     Cart cartProvider = Provider.of(context, listen: false);
-
+    Orders orderProvider = Provider.of<Orders>(context, listen: false);
     return SingleChildScrollView(
       child: Container(
         margin: const EdgeInsets.all(10.0),
@@ -379,12 +382,82 @@ class _SalesScreenState extends State<SalesScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('Cancel'),
+                  onPressed: () async {
+                    int orderId;
+
+                    orderId = await orderProvider.storeOrders(
+                      null,
+                      subtotal,
+                      discount,
+                      returnAmount,
+                      dueAmount,
+                      total,
+                      paidAmount,
+                      OrderStatus.completed,
+                    );
+
+                    for (Product product in cartItems) {
+                      orderProvider.storeOderItems(
+                        orderId,
+                        product.id,
+                        product.name,
+                        product.price,
+                        product.quantity,
+                        discount,
+                      );
+                    }
+                    if (!mounted) return;
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PrintScreen(
+                          orderId: orderId,
+                          paidAmount: 500,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('Suspended'),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('Save'),
+                  onPressed: () async {
+                    int orderId;
+
+                    orderId = await orderProvider.storeOrders(
+                      null,
+                      subtotal,
+                      discount,
+                      returnAmount,
+                      dueAmount,
+                      total,
+                      paidAmount,
+                      OrderStatus.completed,
+                    );
+
+                    for (Product product in cartItems) {
+                      orderProvider.storeOderItems(
+                        orderId,
+                        product.id,
+                        product.name,
+                        product.price,
+                        product.quantity,
+                        discount,
+                      );
+                    }
+                    if (!mounted) return;
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PrintScreen(
+                          orderId: orderId,
+                          paidAmount: 500,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('Save & Print'),
                 ),
               ],
             ),
@@ -652,7 +725,6 @@ class _SalesScreenState extends State<SalesScreen> {
                             ? null
                             : () async {
                                 if (suspendedOrderId != null) {
-                                  // Update existing order
                                   await orderProvider.storeOrders(
                                     suspendedOrderId,
                                     subtotal,
@@ -704,6 +776,7 @@ class _SalesScreenState extends State<SalesScreen> {
                               },
                         child: const Text('Suspend'),
                       ),
+                      const SizedBox(width: 10.0),
                       ElevatedButton(
                         onPressed: cartItems.isEmpty
                             ? null
@@ -711,12 +784,13 @@ class _SalesScreenState extends State<SalesScreen> {
                                 await showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return CustomDialog(suspendedOrderId!);
+                                    return CustomDialog(suspendedOrderId ?? 0);
                                   },
                                 );
                               },
                         child: const Text('Pay'),
                       ),
+                      const SizedBox(width: 10.0),
                       ElevatedButton(
                           onPressed: () {
                             cartProvider.clearCart();
