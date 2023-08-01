@@ -9,6 +9,7 @@ import 'package:pixelone/screens/addingtocart_screen.dart';
 import 'package:pixelone/screens/order_screen.dart';
 import 'package:pixelone/screens/print_screen.dart';
 import 'package:pixelone/widgets/customer_dialog.dart';
+import 'package:pixelone/widgets/discount_dialog.dart';
 import 'package:pixelone/widgets/sales_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -491,371 +492,401 @@ class _SalesScreenState extends State<SalesScreen> {
         Provider.of<Products>(context, listen: false).getFilteredProducts();
     return Row(
       children: [
-        Expanded(
-          flex: 2,
-          child: Container(
-            margin: const EdgeInsets.all(10.0),
-            padding: const EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              border: Border.all(color: Colors.grey),
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          keyboardType: TextInputType.name,
-                          decoration: const InputDecoration(
-                            labelText: 'Walk-in Customer',
-                          ),
-                          onChanged: (value) =>
-                              Provider.of<Customer>(context, listen: false)
-                                  .setSearchText(value),
-                          controller: TextEditingController(
-                            text: getSelectedCustomerName(),
-                          ),
+        Container(
+          height: 700,
+          width: 500,
+          margin: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(5.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            border: Border.all(color: Colors.grey),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        keyboardType: TextInputType.name,
+                        decoration: const InputDecoration(
+                          labelText: 'Walk-in Customer',
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () async {
-                          await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return const CustomerDialog();
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.add_circle_outline_sharp),
-                      ),
-                      IconButton(
-                        onPressed: () async {
-                          customerProvider.selectedCustomer == null;
-                        },
-                        icon: const Icon(Icons.delete_forever_outlined),
-                      ),
-                    ],
-                  ),
-                  Consumer<Customer>(
-                    builder: (context, customerProvider, child) {
-                      final filteredCustomers =
-                          customerProvider.getFilteredCustomers();
-
-                      return customerProvider.searchText.isNotEmpty
-                          ? SizedBox(
-                              height: 150,
-                              width: 300,
-                              child: ListView.separated(
-                                itemCount: filteredCustomers.length,
-                                separatorBuilder: (context, index) =>
-                                    const Divider(),
-                                itemBuilder: (context, index) {
-                                  final customer = filteredCustomers[index];
-                                  return ListTile(
-                                    title: Text(customer.firstName),
-                                    subtitle: Text(customer.address),
-                                    onTap: () {
-                                      customerProvider
-                                          .setSelectedCustomer(customer);
-                                    },
-                                  );
-                                },
-                              ),
-                            )
-                          : const SizedBox.shrink();
-                    },
-                  ),
-                  const SizedBox(height: 10.0),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Warehouse',
-                    ),
-                  ),
-                  if (cartItems.isNotEmpty)
-                    Container(
-                      decoration: BoxDecoration(border: Border.all(width: 2)),
-                      child: FittedBox(
-                        child: DataTable(
-                          columns: const [
-                            DataColumn(
-                              label: Text(
-                                'Product',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                'Price',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                'Quantity',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                'Subtotal',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                'X',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                          rows: cartItems
-                              .map((product) => DataRow(
-                                    cells: [
-                                      DataCell(Text(product.name)),
-                                      DataCell(Text(product.price.toString())),
-                                      DataCell(Row(
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(Icons.remove),
-                                            onPressed: () {
-                                              cartProvider
-                                                  .decreaseQuantity(product);
-                                            },
-                                          ),
-                                          Text(product.quantity.toString()),
-                                          IconButton(
-                                            icon: const Icon(Icons.add),
-                                            onPressed: () {
-                                              cartProvider.addToCart(product);
-                                            },
-                                          ),
-                                        ],
-                                      )),
-                                      DataCell(Text(
-                                          (product.price * product.quantity)
-                                              .toString())),
-                                      DataCell(IconButton(
-                                        icon: const Icon(Icons.delete),
-                                        onPressed: () {
-                                          cartProvider.removeFromCart(product);
-                                        },
-                                      )),
-                                    ],
-                                  ))
-                              .toList(),
+                        onChanged: (value) =>
+                            Provider.of<Customer>(context, listen: false)
+                                .setSearchText(value),
+                        controller: TextEditingController(
+                          text: getSelectedCustomerName(),
                         ),
                       ),
                     ),
-                  const Divider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Subtotal:',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 10.0),
-                      Text(
-                        subtotal.toStringAsFixed(2),
-                        style: const TextStyle(fontSize: 16.0),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Due Amount:',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 10.0),
-                      Text(
-                        dueAmount.toStringAsFixed(2),
-                        style: const TextStyle(fontSize: 16.0),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Total:',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        total.toStringAsFixed(2),
-                        style: const TextStyle(fontSize: 16.0),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10.0),
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: cartItems.isEmpty
-                            ? null
-                            : () async {
-                                if (suspendedOrderId != null) {
-                                  await orderProvider.storeOrders(
-                                    suspendedOrderId,
-                                    subtotal,
-                                    discount,
-                                    returnAmount,
-                                    dueAmount,
-                                    total,
-                                    paidAmount,
-                                    OrderStatus.suspended,
-                                  );
+                    IconButton(
+                      onPressed: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const CustomerDialog();
+                          },
+                        );
+                      },
+                      icon: const Icon(Icons.add_circle_outline_sharp),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        customerProvider.selectedCustomer == null;
+                      },
+                      icon: const Icon(Icons.delete_forever_outlined),
+                    ),
+                  ],
+                ),
+                Consumer<Customer>(
+                  builder: (context, customerProvider, child) {
+                    final filteredCustomers =
+                        customerProvider.getFilteredCustomers();
 
-                                  for (Product product in cartItems) {
-                                    orderProvider.storeOderItems(
-                                      suspendedOrderId!,
-                                      product.id,
-                                      product.name,
-                                      product.price,
-                                      product.quantity,
-                                      discount,
-                                    );
-                                  }
-                                } else {
-                                  final orderId =
-                                      await orderProvider.storeOrders(
-                                    null,
-                                    subtotal,
-                                    discount,
-                                    returnAmount,
-                                    dueAmount,
-                                    total,
-                                    paidAmount,
-                                    OrderStatus.suspended,
-                                  );
-
-                                  for (Product product in cartItems) {
-                                    orderProvider.storeOderItems(
-                                      orderId,
-                                      product.id,
-                                      product.name,
-                                      product.price,
-                                      product.quantity,
-                                      discount,
-                                    );
-                                  }
-                                }
-
-                                cartProvider.setPaidAmount(0);
-                                cartProvider.clearCart();
-                              },
-                        child: const Text('Suspend'),
-                      ),
-                      const SizedBox(width: 10.0),
-                      ElevatedButton(
-                        onPressed: cartItems.isEmpty
-                            ? null
-                            : () async {
-                                await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return CustomDialog(suspendedOrderId ?? 0);
+                    return customerProvider.searchText.isNotEmpty
+                        ? SizedBox(
+                            height: 150,
+                            width: 300,
+                            child: ListView.separated(
+                              itemCount: filteredCustomers.length,
+                              separatorBuilder: (context, index) =>
+                                  const Divider(),
+                              itemBuilder: (context, index) {
+                                final customer = filteredCustomers[index];
+                                return ListTile(
+                                  title: Text(customer.firstName),
+                                  subtitle: Text(customer.address),
+                                  onTap: () {
+                                    customerProvider
+                                        .setSelectedCustomer(customer);
                                   },
                                 );
                               },
-                        child: const Text('Pay'),
-                      ),
-                      const SizedBox(width: 10.0),
-                      ElevatedButton(
-                          onPressed: () {
-                            cartProvider.clearCart();
-                          },
-                          child: const Text('Clear Cart'))
-                    ],
+                            ),
+                          )
+                        : const SizedBox.shrink();
+                  },
+                ),
+                const SizedBox(height: 10.0),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Warehouse',
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 10),
+                if (cartItems.isNotEmpty)
+                  FittedBox(
+                    child: DataTable(
+                      columns: const [
+                        DataColumn(
+                          label: Text(
+                            'Product',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Price',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Quantity',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Subtotal',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'X',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                      rows: cartItems
+                          .map((product) => DataRow(
+                                cells: [
+                                  DataCell(Text(product.name)),
+                                  DataCell(Text(product.price.toString())),
+                                  DataCell(Row(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(
+                                            Icons.remove_circle_outlined),
+                                        color: Colors.blue,
+                                        onPressed: () {
+                                          cartProvider
+                                              .decreaseQuantity(product);
+                                        },
+                                      ),
+                                      Text(product.quantity.toString()),
+                                      IconButton(
+                                        icon: const Icon(Icons.add_box),
+                                        color: Colors.blue,
+                                        onPressed: () {
+                                          cartProvider.addToCart(product);
+                                        },
+                                      ),
+                                    ],
+                                  )),
+                                  DataCell(Text(
+                                      (product.price * product.quantity)
+                                          .toString())),
+                                  DataCell(
+                                    IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      color: Colors.red,
+                                      onPressed: () {
+                                        cartProvider.removeFromCart(product);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                const Divider(),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Text(
+                      'Subtotal:',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 30.0),
+                    Text(
+                      subtotal.toStringAsFixed(2),
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
+                    const SizedBox(width: 50.0),
+                    const Text(
+                      'Total:',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 30.0),
+                    Text(
+                      total.toString(),
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Discount:',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 20.0),
+                    IconButton(
+                      onPressed: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const DiscountDialog();
+                          },
+                        );
+                      },
+                      icon: const Icon(Icons.add_comment),
+                    ),
+                    Text(
+                      discount.toStringAsFixed(2),
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Total:',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      total.toStringAsFixed(2),
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10.0),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: cartItems.isEmpty
+                          ? null
+                          : () async {
+                              if (suspendedOrderId != null) {
+                                await orderProvider.storeOrders(
+                                  suspendedOrderId,
+                                  subtotal,
+                                  discount,
+                                  returnAmount,
+                                  dueAmount,
+                                  total,
+                                  paidAmount,
+                                  OrderStatus.suspended,
+                                );
+
+                                for (Product product in cartItems) {
+                                  orderProvider.storeOderItems(
+                                    suspendedOrderId!,
+                                    product.id,
+                                    product.name,
+                                    product.price,
+                                    product.quantity,
+                                    discount,
+                                  );
+                                }
+                              } else {
+                                final orderId = await orderProvider.storeOrders(
+                                  null,
+                                  subtotal,
+                                  discount,
+                                  returnAmount,
+                                  dueAmount,
+                                  total,
+                                  paidAmount,
+                                  OrderStatus.suspended,
+                                );
+
+                                for (Product product in cartItems) {
+                                  orderProvider.storeOderItems(
+                                    orderId,
+                                    product.id,
+                                    product.name,
+                                    product.price,
+                                    product.quantity,
+                                    discount,
+                                  );
+                                }
+                              }
+
+                              cartProvider.setPaidAmount(0);
+                              cartProvider.clearCart();
+                            },
+                      child: const Text('Suspend'),
+                    ),
+                    const SizedBox(width: 10.0),
+                    ElevatedButton(
+                      onPressed: cartItems.isEmpty
+                          ? null
+                          : () async {
+                              await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomDialog(suspendedOrderId ?? 0);
+                                },
+                              );
+                            },
+                      child: const Text('Pay'),
+                    ),
+                    const SizedBox(width: 10.0),
+                    ElevatedButton(
+                        onPressed: () {
+                          cartProvider.clearCart();
+                        },
+                        child: const Text('Clear Cart'))
+                  ],
+                ),
+              ],
             ),
           ),
         ),
-        Expanded(
-          flex: 2,
-          child: Container(
-            margin: const EdgeInsets.all(10.0),
-            padding: const EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              border: Border.all(color: Colors.grey),
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          onChanged: (value) =>
-                              Provider.of<Products>(context, listen: false)
-                                  .setSearchText(value),
-                          decoration: const InputDecoration(
-                            labelText: 'Search Product',
-                          ),
+        Container(
+          height: 700,
+          width: 480,
+          margin: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            border: Border.all(color: Colors.grey),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        onChanged: (value) =>
+                            Provider.of<Products>(context, listen: false)
+                                .setSearchText(value),
+                        decoration: const InputDecoration(
+                          labelText: 'Search Product',
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 10.0),
-                  Text(
-                      'All Products (${Provider.of<Products>(context).items.length})'),
-                  const SizedBox(height: 10.0),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: filteredList.length,
-                    itemBuilder: (ctx, index) {
-                      final product = filteredList[index];
-                      return GestureDetector(
-                        onTap: () {
-                          cartProvider.addToCart(product);
-                        },
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            child: Image.network(product.imageurl),
-                          ),
-                          title: Text(product.name),
-                          subtitle: Text('Sale Price: ${product.saleprice} '),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10.0),
+                Text(
+                  'All Products (${Provider.of<Products>(context).items.length})',
+                ),
+                const SizedBox(height: 10.0),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: filteredList.length,
+                  itemBuilder: (ctx, index) {
+                    final product = filteredList[index];
+                    return GestureDetector(
+                      onTap: () {
+                        cartProvider.addToCart(product);
+                      },
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          child: Image.network(product.imageurl),
                         ),
-                      );
-                    },
-                  ),
-                ],
-              ),
+                        title: Text(product.name),
+                        subtitle: Text('Sale Price: ${product.saleprice} '),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ),

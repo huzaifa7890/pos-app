@@ -117,17 +117,7 @@ class _CustomDialogState extends State<CustomDialog> {
                             ),
                             Expanded(
                               flex: 1,
-                              child: TextField(
-                                onChanged: (value) {
-                                  cartProvider.setDiscount(
-                                      double.tryParse(value) ?? 0.0);
-                                },
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                        decimal: true),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
+                              child: Text(discount.toString()),
                             ),
                           ],
                         ),

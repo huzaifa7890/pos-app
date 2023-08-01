@@ -148,6 +148,9 @@ class _HomeScreenState extends State<HomeScreen> {
       case 3:
         Navigator.pushNamed(context, '/Orders');
         break;
+      case 4:
+        Navigator.pushNamed(context, '/ExtraScreen');
+        break;
       default:
         break;
     }

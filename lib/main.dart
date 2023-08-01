@@ -17,7 +17,6 @@ import 'package:pixelone/screens/splash_screen.dart';
 import 'package:pixelone/utils/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:pixelone/screens/auth_screen.dart';
-import 'utils/pallete.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,7 +54,7 @@ class MyApp extends StatelessWidget {
           title: 'Pixelone',
           theme: ThemeData(
             fontFamily: GoogleFonts.poppins().fontFamily,
-            primarySwatch: Palette.primaryPaletteColor,
+            primarySwatch: Colors.deepPurple,
             textSelectionTheme: const TextSelectionThemeData(
               cursorColor: primaryColor,
               selectionColor: primaryColor,
